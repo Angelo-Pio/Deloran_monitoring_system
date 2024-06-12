@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script  type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
+
+
+    <title>Deloran Monitoring System</title>
+    <style>
+
+        .chart{
+            width : 50%;
+            height: 60%;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #004b7a;
+            color: #ffffff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: top 0.3s;
+        }
+
+        .navbar.hide {
+            top: -50px;
+        }
+
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .navbar-title {
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .navbar-links a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .navbar-links a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            margin-top: 70px;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar" id="navbar">
+    <div class="navbar-content">
+        <div class="navbar-title">Deloran Monitoring System</div>
+        <div class="navbar-links">
+            <a href="/">Home</a>
+            <a href="#">Global</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+
+    <!--    <div style="width: 800px;"><canvas id="acquisitions"></canvas></div>-->
+
+    <h1 id="A1"> foo </h1>
+
+</div>
+
+<div class="chart">
+
+    <canvas id="resourceChart" ></canvas>
+</div>
+
+<!--Define javascript's graph.js file variables here-->
+<script type="text/javascript" th:inline="javascript">
+    var sys_data = /*[[${gateways}]]*/ [];
+</script>
+<script type="application/javascript" th:inline="javascript" th:src="@{js/graphs.js}" ></script>
+</body>
+</html>
