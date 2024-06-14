@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script  type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
 
 
     <title>Deloran Monitoring System</title>
     <style>
 
-        .chart{
-            width : 50%;
+        .chart {
+            width: 50%;
             height: 60%;
         }
 
@@ -77,19 +78,50 @@
 
     <!--    <div style="width: 800px;"><canvas id="acquisitions"></canvas></div>-->
 
-    <h1 id="A1"> foo </h1>
+    <h1 id="A1"> foo bar </h1>
+
 
 </div>
 
 <div class="chart">
 
-    <canvas id="resourceChart" ></canvas>
+    <canvas id="resourceChart"></canvas>
 </div>
+<div>
+    <!--<form action="#" th:action="@{/getAll}" method="post">
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}"/>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}"/>
+        <button type="submit">Submit</button>
+    </form>-->
 
+    <form id="gateway_data">
+
+
+        <label for="start_time">START</label>
+        <input type="datetime-local" id="start_time">
+        <br>
+        <label for="end_time">END</label>
+        <input type="datetime-local" id="end_time">
+        <br>
+
+        <div th:each="id : ${gateways_ids}">
+
+          <label  th:text="${id}"></label>
+                <input  th:type="checkbox" th:value="${id}">
+                <br>
+        </div>
+
+
+            <button id="submit">Submit</button>
+    </form>
+</div>
 <!--Define javascript's graph.js file variables here-->
-<script type="text/javascript" th:inline="javascript">
+<!--<script type="text/javascript" th:inline="javascript">
     var sys_data = /*[[${gateways}]]*/ [];
-</script>
-<script type="application/javascript" th:inline="javascript" th:src="@{js/graphs.js}" ></script>
+</script>-->
+<script type="application/javascript" th:inline="javascript" th:src="@{js/graphs.js}"></script>
+<script type="application/javascript" th:src="@{js/database.js}"></script>
 </body>
 </html>

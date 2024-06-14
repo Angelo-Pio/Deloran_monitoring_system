@@ -26,6 +26,7 @@ public class IntCotroller {
 
         List<Gateway> gateways = intService.getAllGateways();
         model.addAttribute("gateways", gateways);
+        model.addAttribute("gateways_ids", intService.getAllIds());
 
         return "index";
 

@@ -2,25 +2,6 @@
 var chart = document.getElementById("resourceChart") ;
 console.log(sys_data);
 
-/*
-new Chart(chart,
-    {
-        type: 'bar',
-        data: {
-            labels: sys_data.map(row => row.id),
-            datasets: [
-                {
-                    label: 'Ram Usage',
-                    data: sys_data.map(row => {parseFloat(row.ram_usage.replace('%','')) })
-                }
-            ]
-        }
-
-    }
-
-    );*/
-
-
 
 new Chart(chart,
     {
@@ -59,3 +40,19 @@ new Chart(chart,
 
         }
     });
+
+function addData(chart, label, newData) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.push(newData);
+    });
+    chart.update();
+}
+
+function removeData(chart) {
+    chart.data.labels.pop();
+    chart.data.datasets.forEach((dataset) => {
+        dataset.data.pop();
+    });
+    chart.update();
+}

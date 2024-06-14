@@ -42,4 +42,9 @@ public class RestController {
     ){
         return intService.getAllByIdAndTimestamp(id, start, end);
     }
+
+    @GetMapping("/getAllIds")
+    public List<String> getAllIds() {
+        return intService.getAllIds();
+    }
 }

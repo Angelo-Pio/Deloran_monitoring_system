@@ -2,7 +2,6 @@ package com.tlc.deloran.repository;
 
 
 import com.tlc.deloran.model.Gateway;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,10 +19,12 @@ public interface IntRepository extends MongoRepository<Gateway,String> {
 
     List<Gateway> findAllByTimestampBefore(LocalDateTime end);
 
-    @Query("{timestamp: {$lte: :#{#end} }, id: {$in: {:#{#id}} }")
+    @Query("{$and: [{timestamp: {$lte: ?1 }},{ id: {$in: ?0}}] }")
     List<Gateway> findAllById_TimestampBefore(@Param("id") String[] id, @Param("end") LocalDateTime end);
 
     @Query("{$and: [{timestamp: {$gte: ?1, $lte: ?2 } } ,{id: {$in: ?0 } } ] }")
     List<Gateway> findAllById_Timestamp(@Param("id")String[] id, @Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
+
+
 }
 
