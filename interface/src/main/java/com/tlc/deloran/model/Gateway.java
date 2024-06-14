@@ -3,6 +3,7 @@ package com.tlc.deloran.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -24,6 +25,8 @@ public class Gateway {
     private String net_rx;
     @Field("NET_TX")
     private String net_tx;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @Field("TIMESTAMP")
     private LocalDateTime timestamp;
 

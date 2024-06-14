@@ -8,6 +8,7 @@ import org.delora.db.Model.Gateway;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -54,6 +55,7 @@ public class Mapper {
         gateway.setCpu_usage(node.get("cpu_usage").asText());
         gateway.setRam_usage(node.get("ram_usage").asText());
         LocalDateTime timestamp = LocalDateTime.parse(node.get("timestamp").asText(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        timestamp = timestamp.atZone(ZoneId.of("Europe/Rome")).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
         gateway.setTimestamp(timestamp);
         gateway.setId(node.get("Id").asText());
 
