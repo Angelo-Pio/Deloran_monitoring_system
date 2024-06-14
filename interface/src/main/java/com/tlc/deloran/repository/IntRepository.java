@@ -14,10 +14,16 @@ import java.util.List;
 @Repository
 public interface IntRepository extends MongoRepository<Gateway,String> {
 
-    @Query("{timestamp: {$gte: :#{#start}, $lt: :#{#end} }}")
+    @Query("{timestamp: {$gte: :#{#start}, $lte: :#{#end} }}")
     List<Gateway> findAllByTimestamp(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
 
     List<Gateway> findAllByTimestampBefore(LocalDateTime end);
+
+    @Query("{timestamp: {$lte: :#{#end} }, id: {$in: {:#{#id}} }")
+    List<Gateway> findAllById_TimestampBefore(@Param("id") String[] id, @Param("end") LocalDateTime end);
+
+    @Query("{$and: [{timestamp: {$gte: ?1, $lte: ?2 } } ,{id: {$in: ?0 } } ] }")
+    List<Gateway> findAllById_Timestamp(@Param("id")String[] id, @Param("start")LocalDateTime start, @Param("end")LocalDateTime end);
 }
 

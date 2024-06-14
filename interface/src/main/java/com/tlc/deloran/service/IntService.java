@@ -45,9 +45,28 @@ public class IntService {
         return allByTimestamp;*/
     }
 
-    public List<Gateway> getAllByIdAndTimestamp(String id, LocalDateTime start, LocalDateTime end){
-        if(id == null){
-
+    public List<Gateway> getAllByIdAndTimestamp(String[] id, LocalDateTime start, LocalDateTime end){
+        if(id == null || id.length == 0){
+            return getAllGatewaysByTimestamp(start, end);
+        }else{
+            return getAllGatewaysById(id,start,end);
         }
     }
+
+    private List<Gateway> getAllGatewaysById(String[] id, LocalDateTime start, LocalDateTime end) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime lastHour = now.minusHours(1);
+        if(start == null && end == null){
+            return intRepository.findAllById_Timestamp(id,lastHour, now);
+        } else if (start != null && end == null) {
+            return intRepository.findAllById_Timestamp(id,start, now);
+        }else if(start == null && end != null){
+            return intRepository.findAllById_TimestampBefore(id,end);
+        }
+        else{
+            return intRepository.findAllById_Timestamp(id,start, end);
+        }
+    }
+
+
 }
