@@ -26,9 +26,11 @@ $(document).ready(function () {
             },
             success: function (data) {
                 // Assuming data is an array of objects
-                console.log(data);
+                var dataset = createDataset(data,'cpu_usage');
                 sys_data = data;
-                if ($('#resourceChart').hasClass("0")) {
+                createChart(sys_data,dataset);
+
+                /*if ($('#resourceChart').hasClass("0")) {
                     ch = createChart(sys_data);
 
                     $('#resourceChart').attr("class", "1");
@@ -42,8 +44,7 @@ $(document).ready(function () {
                             x: row.timestamp
                         }));
                     addData(ch,sys_data.map(r=>r.timestamp),ds_ata);
-                }
-                console.log(ch);
+                }*/
             },
             error: function () {
                 alert('Error fetching data');
@@ -55,7 +56,7 @@ $(document).ready(function () {
 });
 
 
-function createChart(sys_data) {
+function createChart(sys_data,dataset) {
     var elem = document.getElementById("resourceChart");
 
 
@@ -66,7 +67,7 @@ function createChart(sys_data) {
             data: {
                 labels: sys_data.map(row => row.timestamp),
                 datasets: [
-                    {
+                    /*{
                         label: "Cpu Usage",
                         data: sys_data.map(row => (
                             {
@@ -79,11 +80,13 @@ function createChart(sys_data) {
                         tension: 0.1,
                         showLine: true
 
-                    }
+                    }*/
                 ]
 
             }
         });
+    chart.data.datasets = dataset;
+    chart.update();
 
     return chart;
 }
@@ -124,17 +127,26 @@ function Gateway(id,sys_data) {
     this.showLine= true;
 }
 
-function createDatasets(db_data){
+function createDataset(db_data,property){
 
-    var datasets = [];
+    var dataset = [];
     const map = new Map();
 
+    // Per ogni gateway dal db, crea una mappa per raggruppare le info per gateway
     db_data.forEach(o => {
         if(!map.has(o.id)){
             map.set(o.id,[]);
         }
-        map.get(o.id).push(o);
+        map.get(o.id).push(
+            {
+                y : o[property].replace('%', ''),
+                x : o.timestamp
+            }
+        );
     });
+    map.forEach((value, key) => dataset.push(new Gateway(key,value)));
+    console.log(dataset);
+    return dataset;
 
 }
 
