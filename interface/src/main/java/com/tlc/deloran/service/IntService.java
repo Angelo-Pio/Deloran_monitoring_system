@@ -1,6 +1,7 @@
 package com.tlc.deloran.service;
 
 import com.mongodb.client.DistinctIterable;
+import com.mongodb.client.MongoClient;
 import com.tlc.deloran.model.Gateway;
 import com.tlc.deloran.repository.IntRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 @Service
 public class IntService {
@@ -20,11 +23,29 @@ public class IntService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Autowired
+    private MongoClient mongo;
 
+    private static final String collectionName = "gateway";
 
 
     public List<Gateway> getAllGateways(){
         return intRepository.findAll();
+    }
+
+    // Main method
+    public List<Gateway> getAllByIdAndTimestamp(String[] id, LocalDateTime start, LocalDateTime end){
+
+
+        start = start != null ? toUTC(start) : null;
+        end = end != null ? toUTC(end) : null;
+        List<Gateway> gateways = new LinkedList<>();
+        if(id == null || id.length == 0){
+            gateways = getAllGatewaysByTimestamp(start, end);
+        }else{
+            gateways =  getAllGatewaysById(id,start,end);
+        }
+        return gateways;
     }
 
     public List<Gateway> getAllGatewaysByTimestamp(LocalDateTime start, LocalDateTime end){
@@ -45,22 +66,10 @@ public class IntService {
         else{
             return intRepository.findAllByTimestamp(start, end);
         }
-
-
-        /*List<Gateway> allByTimestamp = intRepository.findAllByTimestamp(start, end);
-        return allByTimestamp;*/
     }
 
-    public List<Gateway> getAllByIdAndTimestamp(String[] id, LocalDateTime start, LocalDateTime end){
 
-        start = toUTC(start);
-        end = toUTC(end);
-        if(id == null || id.length == 0){
-            return getAllGatewaysByTimestamp(start, end);
-        }else{
-            return getAllGatewaysById(id,start,end);
-        }
-    }
+
 
     private List<Gateway> getAllGatewaysById(String[] id, LocalDateTime start, LocalDateTime end) {
         LocalDateTime now = toUTC(LocalDateTime.now());

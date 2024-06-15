@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface IntRepository extends MongoRepository<Gateway,String> {
 
-    @Query("{timestamp: {$gte: :#{#start}, $lte: :#{#end} }}")
+    @Query("{timestamp: {$gte: ?0, $lte: ?1 }}")
     List<Gateway> findAllByTimestamp(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
 
