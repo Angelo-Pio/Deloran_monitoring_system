@@ -1,12 +1,21 @@
 var sys_data;
-var ch = null;
+
+//List of CustomChart
+var chart_list = [];
+
+function CustomChart(canva_name,chart){
+    this.canva_name = canva_name;
+    this.chart=chart;
+}
 
 $('#reset').click(function (event) {
     event.preventDefault();
-    if (ch != null) {
-        ch.destroy();
-        $('#resourceChart').attr("class", "0");
-    }
+    chart_list.forEach(c => {
+        $('#'.concat(c.canva_name)).attr("class", "0");
+        c.chart.destroy();
+    })
+    chart_list = [];
+
 })
 
 
@@ -33,10 +42,10 @@ $(document).ready(function () {
             },
             success: function (data) {
                 // Assuming data is an array of objects
-                var dataset = createDataset(data, 'net');
                 sys_data = data;
-
-                handleChartCreationAndUpdate("resourceChart",data,"cpu_usage");
+                handleChartCreationAndUpdate("CPU_Usage",data,"cpu_usage");
+                handleChartCreationAndUpdate("RAM_Usage",data,"ram_usage");
+                handleChartCreationAndUpdate("NET_Usage",data,"net");
 
 
             },
@@ -50,19 +59,27 @@ $(document).ready(function () {
 });
 
 function handleChartCreationAndUpdate(chartName, db_data, property) {
-    if ($('#' + chartName).hasClass("0")) {
 
-        ch = createChart(db_data, createDataset(db_data, property), chartName);
-        $('#' + chartName).attr("class", "1");
+    var chart = $('#'.concat(chartName));
+    if (chart.hasClass("0")) {
+
+        chart_list.push(createChart(db_data, createDataset(db_data, property), chartName));
+        chart.attr("class", "1");
 
     } else {
-        removeData(ch);
-        addData(ch, db_data.map(r => r.timestamp), createDataset(db_data, property));
+
+        chart_list.forEach(c => {
+            if(c.canva_name === chartName){
+                removeData(c.chart);
+                addData(c.chart, db_data.map(r => r.timestamp), createDataset(db_data, property));
+            }
+        })
+
     }
 }
 
 function createChart(sys_data, dataset, title) {
-    var elem = document.getElementById("resourceChart");
+    var elem = document.getElementById(title);
 
 
     var chart = new Chart(elem,
@@ -86,16 +103,18 @@ function createChart(sys_data, dataset, title) {
     chart.data.datasets = dataset;
     chart.update();
 
-    return chart;
+    return new CustomChart(title,chart);
 }
 
 function addData(chart, label, newData) {
     chart.data.labels = label;
     chart.data.datasets = newData;
     chart.update();
+
 }
 
 function removeData(chart) {
+
     chart.data.labels = [];
     chart.data.datasets = [];
     chart.update();
