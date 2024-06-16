@@ -65,7 +65,7 @@
         }
     </style>
 </head>
-<body>
+<body class="grid ">
 <div class="navbar" id="navbar">
     <div class="navbar-content">
         <div class="navbar-title">Deloran Monitoring System</div>
@@ -77,38 +77,35 @@
 </div>
 <div class="container">
 
-    <!--    <div style="width: 800px;"><canvas id="acquisitions"></canvas></div>-->
-
-    <h1 id="A1"> foo bar </h1>
+    <h1 id="A1"> Deloran Monitoring system </h1>
 
 
 </div>
 
 
-<div>
+<div class="w-1/2 justify-self-center">
 
-    <form id="gateway_data" class="m-10 shadow-lg ring-1 ring-black ring-opacity-5   place-content-evenly">
+    <form id="gateway_data" class=" m-10 shadow-lg ring-1 ring-black ring-opacity-5   place-content-evenly">
 
-        <div class=" flex p-5 items-center">
-            <div class="flex items-center ">
+        <div class="grid grid-cols-2 grid-rows-2 gap-2  flex p-5 justify-center">
 
-                <div class="shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
+            <div class="col-span-1 shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
 
-                    <label for="start_time">START</label>
-                    <input type="datetime-local" id="start_time">
-                </div>
-
-                <div class="shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
-
-                    <label for="end_time">END</label>
-                    <input type="datetime-local" id="end_time">
-                </div>
-
+                <label for="start_time">START</label>
+                <input type="datetime-local" id="start_time">
             </div>
+
+            <div class="col-span-1 shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
+
+                <label for="end_time">END</label>
+                <input type="datetime-local" id="end_time">
+            </div>
+
+
             <br>
 
             <!--Check box drop down menu-->
-            <div class="relative inline-block text-right ml-12">
+            <div class="col-span-2  justify-self-center w-auto  relative inline-block text-right ml-12">
                 <div>
                     <button id="dropdownButton" type="button"
                             class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -141,19 +138,19 @@
             </div>
 
 
-            <div class="mt-4 inline-block">
+            <div class="mt-4 inline-block w-auto justify-self-center col-span-1 ">
                 <button id="submit"
-                        class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Submit
                 </button>
             </div>
-            <div class="mt-4 inline-block">
+            <div class="mt-4 inline-block w-auto justify-self-center col-span-1 ">
                 <button id="reset"
-                        class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                     Reset
                 </button>
-
             </div>
+
         </div>
     </form>
 </div>
