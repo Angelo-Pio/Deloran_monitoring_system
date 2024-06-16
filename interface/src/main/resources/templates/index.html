@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
 
 
@@ -83,45 +84,92 @@
 
 </div>
 
-<div class="chart">
 
-    <canvas id="resourceChart" class="0"></canvas>
-</div>
 <div>
-    <!--<form action="#" th:action="@{/getAll}" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" th:field="*{name}"/>
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}"/>
-        <button type="submit">Submit</button>
-    </form>-->
 
-    <form id="gateway_data">
+    <form id="gateway_data" class="m-10 shadow-lg ring-1 ring-black ring-opacity-5   place-content-evenly">
+
+        <div class=" flex p-5 items-center">
+            <div class="flex items-center ">
+
+                <div class="shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
+
+                    <label for="start_time">START</label>
+                    <input type="datetime-local" id="start_time">
+                </div>
+
+                <div class="shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
+
+                    <label for="end_time">END</label>
+                    <input type="datetime-local" id="end_time">
+                </div>
+
+            </div>
+            <br>
+
+            <!--Check box drop down menu-->
+            <div class="relative inline-block text-right ml-12">
+                <div>
+                    <button id="dropdownButton" type="button"
+                            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            aria-expanded="true" aria-haspopup="true">
+                        Scegli un gateway
+                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                             fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                  d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div id="dropdownMenu"
+                     class="hidden origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div class="py-1 flex items-center" role="menu" aria-orientation="vertical"
+                         aria-labelledby="dropdownButton" th:each="id : ${gateways_ids}">
+                        <div>
+
+                            <label class=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                                   th:text="${id}" for="check">
+                            </label>
+                            <input id="check" th:type="checkbox" type="checkbox"
+                                   class="mr-3 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                   th:value="${id}">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
-        <label for="start_time">START</label>
-        <input type="datetime-local" id="start_time">
-        <br>
-        <label for="end_time">END</label>
-        <input type="datetime-local" id="end_time">
-        <br>
+            <div class="mt-4 inline-block">
+                <button id="submit"
+                        class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Submit
+                </button>
+            </div>
+            <div class="mt-4 inline-block">
+                <button id="reset"
+                        class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Reset
+                </button>
 
-        <div th:each="id : ${gateways_ids}">
+            </div>
 
-          <label  th:text="${id}"></label>
-                <input  th:type="checkbox" th:value="${id}">
-                <br>
-        </div>
-
-
-            <button id="submit">Submit</button>
     </form>
-    <button id="reset">Reset</button>
 </div>
-<!--Define javascript's graph.js file variables here-->
-<!--<script type="text/javascript" th:inline="javascript">
-    var sys_data = /*[[${gateways}]]*/ [];
-</script>-->
+
+<div class="m-20 p-10 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+
+    <div class="chart w-full">
+        <canvas id="resourceChart" class="0"></canvas>
+    </div>
+</div>
+<script>
+    document.getElementById('dropdownButton').addEventListener('click', function () {
+        var menu = document.getElementById('dropdownMenu');
+        menu.classList.toggle('hidden');
+    });
+</script>
 <script type="application/javascript" th:inline="javascript" th:src="@{js/graphs.js}"></script>
 <script type="application/javascript" th:src="@{js/database.js}"></script>
 </body>
