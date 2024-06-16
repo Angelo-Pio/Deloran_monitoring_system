@@ -9,6 +9,7 @@ $('#reset').click(function (event) {
     }
 })
 
+
 $(document).ready(function () {
     $('#gateway_data').submit(function (event) {
         event.preventDefault();
@@ -35,17 +36,9 @@ $(document).ready(function () {
                 var dataset = createDataset(data, 'net');
                 sys_data = data;
 
-                if ($('#resourceChart').hasClass("0")) {
-                    ch = createChart(sys_data, dataset, "Network Resources Usage");
+                handleChartCreationAndUpdate("resourceChart",data,"cpu_usage");
 
-                    $('#resourceChart').attr("class", "1");
 
-                } else {
-                    dataset = createDataset(data,'cpu_usage');
-
-                    removeData(ch);
-                    addData(ch, sys_data.map(r => r.timestamp), dataset);
-                }
             },
             error: function () {
                 alert('Error fetching data');
@@ -56,6 +49,17 @@ $(document).ready(function () {
 
 });
 
+function handleChartCreationAndUpdate(chartName, db_data, property) {
+    if ($('#' + chartName).hasClass("0")) {
+
+        ch = createChart(db_data, createDataset(db_data, property), chartName);
+        $('#' + chartName).attr("class", "1");
+
+    } else {
+        removeData(ch);
+        addData(ch, db_data.map(r => r.timestamp), createDataset(db_data, property));
+    }
+}
 
 function createChart(sys_data, dataset, title) {
     var elem = document.getElementById("resourceChart");
@@ -122,7 +126,7 @@ function createDataset(db_data, property) {
     var dataset = [];
     const map = new Map();
 
-    function fillMapAndReplace(obj,id,property,toReplace) {
+    function fillMapAndReplace(obj, id, property, toReplace) {
         if (!map.has(id)) {
             map.set(id, []);
         }
@@ -139,12 +143,12 @@ function createDataset(db_data, property) {
     db_data.forEach(o => {
 
         if (property == "cpu_usage" || property == "ram_usage") {
-            fillMapAndReplace(o,o.id,property,'%');
+            fillMapAndReplace(o, o.id, property, '%');
         }
         if (property == "net") {
 
-            fillMapAndReplace(o,o.id+"rx","net_rx",' bytes');
-            fillMapAndReplace(o,o.id+"tx","net_tx",' bytes');
+            fillMapAndReplace(o, o.id + "rx", "net_rx", ' bytes');
+            fillMapAndReplace(o, o.id + "tx", "net_tx", ' bytes');
 
         }
 
