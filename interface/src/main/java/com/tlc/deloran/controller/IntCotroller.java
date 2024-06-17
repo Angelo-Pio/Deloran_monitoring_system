@@ -35,12 +35,12 @@ public class IntCotroller {
 
 
 
-    @GetMapping("/graphs")
-    public String graphs(Model model){
+    @GetMapping("/realtime")
+    public String realtime(Model model){
 
         List<Gateway> gateways = intService.getAllGateways();
         model.addAttribute("gateways", gateways);
-        return "graphs";
+        return "realtime";
 
     }
 }

@@ -8,6 +8,7 @@ function CustomChart(canva_name,chart){
     this.chart=chart;
 }
 
+// Reset graphs
 $('#reset').click(function (event) {
     event.preventDefault();
     chart_list.forEach(c => {

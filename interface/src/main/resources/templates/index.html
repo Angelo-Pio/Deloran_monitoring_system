@@ -70,8 +70,8 @@
     <div class="navbar-content">
         <div class="navbar-title">Deloran Monitoring System</div>
         <div class="navbar-links">
-            <a href="/">Home</a>
-            <a href="#">Global</a>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/realtime}">Realtime graphs</a>
         </div>
     </div>
 </div>
@@ -173,7 +173,6 @@
         menu.classList.toggle('hidden');
     });
 </script>
-<script type="application/javascript" th:inline="javascript" th:src="@{js/graphs.js}"></script>
 <script type="application/javascript" th:src="@{js/database.js}"></script>
 </body>
 </html>

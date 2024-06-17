@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<style>
+
+    .chart {
+        width: 50%;
+        height: 60%;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .navbar {
+        background-color: #004b7a;
+        color: #ffffff;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: top 0.3s;
+    }
+
+    .navbar.hide {
+        top: -50px;
+    }
+
+    .navbar-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+    }
+
+    .navbar-title {
+        font-family: 'Arial Black', sans-serif;
+    }
+
+    .navbar-links a {
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 20px;
+    }
+
+    .navbar-links a:hover {
+        text-decoration: underline;
+    }
+
+    .container {
+        margin-top: 70px;
+        padding: 20px;
+        background-color: #f2f2f2;
+        border-radius: 10px;
+    }
+</style>
+<body class="grid bg-gray-100 flex items-center justify-center h-screen">
+
+<div class="navbar" id="navbar">
+    <div class="navbar-content">
+        <div class="navbar-title">Deloran Monitoring System</div>
+        <div class="navbar-links">
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/realtime}">Realtime graphs</a>
+        </div>
+    </div>
+</div>
+
+<h1 id="foo">HELLO</h1>
+
+<div class="m-20 p-10 w-2/3 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+
+    <div class="chart w-full">
+        <canvas id="CPU_Usage" class="0"></canvas>
+    </div>
+    <div class="chart w-full">
+        <canvas id="RAM_Usage" class="0"></canvas>
+    </div>
+    <div class="chart w-full">
+        <canvas id="NET_Usage" class="0"></canvas>
+    </div>
+</div>
+
+<script type="application/javascript" th:src="@{js/database.js}"></script>
+<script type="application/javascript" th:src="@{js/realtime.js}"></script>
+</body>
+
+</html>
