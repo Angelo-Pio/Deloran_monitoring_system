@@ -38,8 +38,8 @@ public class IntService {
     public List<Gateway> getAllByIdAndTimestamp(String[] id, LocalDateTime start, LocalDateTime end){
 
 
-        start = start != null ? toUTC(start) : null;
-        end = end != null ? toUTC(end) : null;
+       /* start = start != null ? toUTC(start) : null;
+        end = end != null ? toUTC(end) : null;*/
         List<Gateway> gateways = new LinkedList<>();
         if(id == null){
             gateways = getAllGatewaysByTimestamp(start, end);
@@ -75,7 +75,7 @@ public class IntService {
 
 
     private List<Gateway> getAllGatewaysById(String[] id, LocalDateTime start, LocalDateTime end) {
-        LocalDateTime now = toUTC(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
         LocalDateTime lastHour = now.minusHours(1);
         if(start == null && end == null){
             return intRepository.findAllById_Timestamp(id,lastHour, now);

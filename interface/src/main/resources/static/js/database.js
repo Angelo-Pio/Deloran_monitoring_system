@@ -40,6 +40,8 @@ $(document).ready(function () {
                     handleChartCreationAndUpdate("CPU_Usage", data, "cpu_usage");
                     handleChartCreationAndUpdate("RAM_Usage", data, "ram_usage");
                     handleChartCreationAndUpdate("NET_Usage", data, "net");
+                }else{
+                    destroyCharts();
                 }
 
             },

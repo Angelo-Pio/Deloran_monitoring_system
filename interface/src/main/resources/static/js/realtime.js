@@ -36,6 +36,8 @@ function generateGraphs() {
                 handleChartCreationAndUpdate("RAM_Usage", data, "ram_usage");
                 handleChartCreationAndUpdate("NET_Usage", data, "net");
                 disableAnimation();
+            }else{
+                destroyCharts();
             }
 
         },

@@ -1,4 +1,5 @@
 
+var color_map= new Map();
 
 function CustomChart(canva_name,chart){
     this.canva_name = canva_name;
@@ -82,6 +83,10 @@ function getRandomRgbColor() {
     return `rgb(${r},${g},${b})`;
 }
 
+function getBorderColor(id) {
+    return color_map.get(id);
+}
+
 /* Gateway === Dataset
     192.168.1.12 -> sys_data: tutti i dati relativi alla ram usage
  */
@@ -90,9 +95,9 @@ function Gateway(id, sys_data) {
     this.data = sys_data
 
     this.fill = false;
-    this.borderColor = getRandomRgbColor();
     this.tension = 0.1;
     this.showLine = true;
+    this.borderColor =  getBorderColor(id);
 }
 
 function createDataset(db_data, property) {
@@ -105,12 +110,17 @@ function createDataset(db_data, property) {
             map.set(id, []);
         }
 
+
         map.get(id).push(
             {
                 y: obj[property].replace(toReplace, ''),
                 x: obj.timestamp
             }
         );
+
+        if(!color_map.has(id)){
+            color_map.set(id,getRandomRgbColor());
+        }
     }
 
 // Per ogni gateway dal db, crea una mappa per raggruppare le info per gateway
@@ -127,7 +137,7 @@ function createDataset(db_data, property) {
         }
 
     });
-    map.forEach((value, key) => dataset.push(new Gateway(key, value)));
+    map.forEach((value, key) => dataset.push(new Gateway(key, value) ));
     console.log(dataset);
     return dataset;
 
