@@ -8,14 +8,9 @@ var chart_list = [];
 // Reset graphs
 $('#reset').click(function (event) {
     event.preventDefault();
-    chart_list.forEach(c => {
-        $('#'.concat(c.canva_name)).attr("class", "0");
-        c.chart.destroy();
-    })
-    chart_list = [];
+    destroyCharts();
 
 })
-
 
 $(document).ready(function () {
     $('#gateway_data').submit(function (event) {
@@ -40,7 +35,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 // Assuming data is an array of objects
-                sys_data = data;
+                console.log(data);
                 if(data.length !== 0) {
                     handleChartCreationAndUpdate("CPU_Usage", data, "cpu_usage");
                     handleChartCreationAndUpdate("RAM_Usage", data, "ram_usage");

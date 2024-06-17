@@ -34,9 +34,9 @@ public class RestController {
     @GetMapping("/getAllById&Timestamp")
     public List<Gateway> getAllByIdAndTimestamp(
             @RequestParam(value = "start",required = false)
-            LocalDateTime start,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(value = "end",required = false)
-            LocalDateTime end,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             @RequestParam(value = "id",required = false) String[] id
     ){
         return intService.getAllByIdAndTimestamp(id, start, end);

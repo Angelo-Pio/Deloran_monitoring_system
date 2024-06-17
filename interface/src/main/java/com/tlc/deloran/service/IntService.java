@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -40,9 +41,11 @@ public class IntService {
         start = start != null ? toUTC(start) : null;
         end = end != null ? toUTC(end) : null;
         List<Gateway> gateways = new LinkedList<>();
-        if(id == null || id.length == 0){
+        if(id == null){
             gateways = getAllGatewaysByTimestamp(start, end);
-        }else{
+        } else if (id.length == 0) {
+            gateways = getAllGatewaysByTimestamp(start, end);
+        } else{
             gateways =  getAllGatewaysById(id,start,end);
         }
         return gateways;
@@ -98,6 +101,7 @@ public class IntService {
     }
 
     public LocalDateTime toUTC(LocalDateTime date){
-        return date.atZone(ZoneId.of("Europe/Rome")).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
+        ZonedDateTime utc = date.atZone(ZoneId.of("Europe/Rome")).withZoneSameInstant(ZoneId.of("UTC"));
+        return utc.toLocalDateTime();
     }
 }

@@ -1,9 +1,17 @@
 
+
 function CustomChart(canva_name,chart){
     this.canva_name = canva_name;
     this.chart=chart;
 }
 
+function destroyCharts() {
+    chart_list.forEach(c => {
+        $('#'.concat(c.canva_name)).attr("class", "0");
+        c.chart.destroy();
+    })
+    chart_list = [];
+}
 
 function handleChartCreationAndUpdate(chartName, db_data, property) {
 
@@ -124,3 +132,4 @@ function createDataset(db_data, property) {
     return dataset;
 
 }
+
