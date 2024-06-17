@@ -63,9 +63,9 @@
         border-radius: 10px;
     }
 </style>
-<body class="grid bg-gray-100 flex items-center justify-center h-screen">
+<body class="bg-gray-100 flex items-center justify-center h-screen">
 
-<div class="navbar" id="navbar">
+<div class="navbar mb-20" id="navbar">
     <div class="navbar-content">
         <div class="navbar-title">Deloran Monitoring System</div>
         <div class="navbar-links">
@@ -75,9 +75,8 @@
     </div>
 </div>
 
-<h1 id="foo">HELLO</h1>
 
-<div class="m-20 p-10 w-2/3 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+<div class="m-20 p-10 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
     <div class="chart w-full">
         <canvas id="CPU_Usage" class="0"></canvas>
@@ -90,7 +89,7 @@
     </div>
 </div>
 
-<script type="application/javascript" th:src="@{js/database.js}"></script>
+<script type="application/javascript" th:src="@{js/aux.js}"></script>
 <script type="application/javascript" th:src="@{js/realtime.js}"></script>
 </body>
 
