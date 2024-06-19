@@ -9,4 +9,5 @@ public class Costants {
 
 
     public static final String DB_NAME = "deloran";
+    public static final String collection="gateway";
 }

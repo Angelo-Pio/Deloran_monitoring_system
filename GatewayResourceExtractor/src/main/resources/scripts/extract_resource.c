@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <net/if.h>
 #include <arpa/inet.h>
+#define MAX_LINE_LENGTH 256
 
 void resetBuffs();
 void get_cpu_usage();
@@ -16,12 +17,15 @@ void get_network_usage();
 void get_ram_usage();
 void get_timestamp();
 void get_id();
+unsigned long long get_value_from_line(const char *line);
+void get_memory_usage_string(char *ram, size_t ram_size);
 
 char cpu[1000];
 char ram[1000];
 char net[1000];
 char timestamp[1000];
 char id[1000];
+char* interface = "wlp2s0:";
 
 
 int main(int argc, char const *argv[])
@@ -35,7 +39,7 @@ int main(int argc, char const *argv[])
         get_id();
         get_timestamp();
         get_cpu_usage();
-        get_ram_usage();
+        get_memory_usage_string(ram,sizeof(ram));
         get_network_usage();
 
 
@@ -159,46 +163,55 @@ void get_cpu_usage()
     }
 }
 
-void get_ram_usage()
-{
-    FILE *fp;
-    char buffer[1024 * 3];
-    size_t bytes_read;
-    char *match;
-    long total_memory, free_memory;
 
-    fp = fopen("/proc/meminfo", "r");
-    if (fp == NULL)
-    {
-        perror("Error opening /proc/meminfo");
+// Function to extract integer value from a line in /proc/meminfo
+unsigned long long get_value_from_line(const char *line) {
+    // Find the beginning of the numeric value
+    const char *ptr = line;
+    while (*ptr < '0' || *ptr > '9') {
+        ptr++;
+    }
+
+    // Extract the numeric value
+    return strtoull(ptr, NULL, 10);
+}
+
+// Function to retrieve memory usage percentage and format as a string
+void get_memory_usage_string(char *ram, size_t ram_size) {
+    FILE *file = fopen("/proc/meminfo", "r");
+    if (file == NULL) {
+        snprintf(ram, ram_size, "\"ram_usage\" : \"Failed to open /proc/meminfo\" ,\n");
         return;
     }
 
-    bytes_read = fread(buffer, 1, sizeof(buffer) - 1, fp);
-    fclose(fp);
+    char line[MAX_LINE_LENGTH];
+    unsigned long long mem_total = 0, mem_free = 0, mem_buffers = 0, mem_cached = 0;
 
-    if (bytes_read == 0 || bytes_read == sizeof(buffer) - 1)
-    {
-        fprintf(stderr, "Error reading /proc/meminfo or buffer overflow\n");
-        return;
-    }
-
-    buffer[bytes_read] = '\0';
-    match = strstr(buffer, "MemTotal:");
-    if (match != NULL)
-    {
-        sscanf(match, "MemTotal: %ld kB", &total_memory);
-        match = strstr(buffer, "MemFree:");
-        if (match != NULL)
-        {
-            sscanf(match, "MemFree: %ld kB", &free_memory);
-
-            float used_memory = (float)(total_memory - free_memory) / total_memory * 100;
-
-            snprintf(ram, sizeof(ram), "\"ram_usage\" : \"%.2f%%\" ,\n", used_memory);
+    // Read each line from /proc/meminfo
+    while (fgets(line, MAX_LINE_LENGTH, file)) {
+        if (strncmp(line, "MemTotal:", 9) == 0) {
+            mem_total = get_value_from_line(line);
+        } else if (strncmp(line, "MemFree:", 8) == 0) {
+            mem_free = get_value_from_line(line);
+        } else if (strncmp(line, "Buffers:", 8) == 0) {
+            mem_buffers = get_value_from_line(line);
+        } else if (strncmp(line, "Cached:", 7) == 0) {
+            mem_cached = get_value_from_line(line);
         }
     }
+
+    fclose(file);
+
+    // Calculate used memory as (MemTotal - MemFree - Buffers - Cached)
+    unsigned long long mem_used = mem_total - mem_free - mem_buffers - mem_cached;
+
+    // Calculate memory usage percentage
+    double usage_percentage = ((double)mem_used / mem_total) * 100.0;
+
+    // Format the result as a string
+    snprintf(ram, ram_size, "\"ram_usage\" : \"%.2f%%\" ,\n", usage_percentage);
 }
+
 
 void get_network_usage()
 {
@@ -229,7 +242,7 @@ void get_network_usage()
     while (line != NULL)
     {
         //THIS VALUE MUST BE CONFIGURABLE
-        if (strstr(line, "wlp2s0:") != NULL)
+        if (strstr(line, interface) != NULL)
         {
             sscanf(line, "%s %ld %*d %*d %*d %*d %*d %*d %*d %ld", iface, &rx_bytes, &tx_bytes);
             break;

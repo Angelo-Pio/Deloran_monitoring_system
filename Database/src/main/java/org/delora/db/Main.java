@@ -35,7 +35,7 @@ public class Main {
         // MongoDB routine
         MongoClient mongoClient = MongoClients.create(costants.JDBC_URL);
         MongoDatabase db = mongoClient.getDatabase(costants.DB_NAME);
-        MongoCollection<Document> collection = db.getCollection("gateway");
+        MongoCollection<Document> collection = db.getCollection(costants.collection);
         System.out.println("connection enstablished with db");
 
         // Receive messages from rabbitmq
