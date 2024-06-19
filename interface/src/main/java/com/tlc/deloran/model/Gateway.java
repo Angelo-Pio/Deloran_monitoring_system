@@ -1,14 +1,16 @@
 package com.tlc.deloran.model;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-
-@Document(collection = "gateway")
+@Document(collection = "#{@environment.getProperty('deloran.env.mongodb.collection')}")
+@Component
 public class Gateway {
 
 

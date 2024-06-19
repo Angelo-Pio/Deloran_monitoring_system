@@ -27,9 +27,6 @@ public class IntService {
     @Autowired
     private MongoClient mongo;
 
-    private static final String collectionName = "gateway";
-
-
     public List<Gateway> getAllGateways(){
         return intRepository.findAll();
     }
@@ -58,9 +55,9 @@ public class IntService {
 //        if start null give all until end
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime lastHour = now.minusHours(1);
+        LocalDateTime last5Minutes = now.minusMinutes(5);
         if(start == null && end == null){
-            return intRepository.findAllByTimestamp(lastHour, now);
+            return intRepository.findAllByTimestamp(last5Minutes, now);
         } else if (start != null && end == null) {
             return intRepository.findAllByTimestamp(start, now);
         }else if(start == null && end != null){
@@ -76,9 +73,9 @@ public class IntService {
 
     private List<Gateway> getAllGatewaysById(String[] id, LocalDateTime start, LocalDateTime end) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime lastHour = now.minusHours(1);
+        LocalDateTime last5Minutes = now.minusMinutes(5);
         if(start == null && end == null){
-            return intRepository.findAllById_Timestamp(id,lastHour, now);
+            return intRepository.findAllById_Timestamp(id,last5Minutes, now);
         } else if (start != null && end == null) {
             return intRepository.findAllById_Timestamp(id,start, now);
         }else if(start == null && end != null){
@@ -100,8 +97,8 @@ public class IntService {
         return list;
     }
 
-    public LocalDateTime toUTC(LocalDateTime date){
+    /*public LocalDateTime toUTC(LocalDateTime date){
         ZonedDateTime utc = date.atZone(ZoneId.of("Europe/Rome")).withZoneSameInstant(ZoneId.of("UTC"));
         return utc.toLocalDateTime();
-    }
+    }*/
 }

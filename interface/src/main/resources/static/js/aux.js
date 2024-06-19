@@ -1,9 +1,8 @@
+var color_map = new Map();
 
-var color_map= new Map();
-
-function CustomChart(canva_name,chart){
+function CustomChart(canva_name, chart) {
     this.canva_name = canva_name;
-    this.chart=chart;
+    this.chart = chart;
 }
 
 function destroyCharts() {
@@ -14,26 +13,30 @@ function destroyCharts() {
     chart_list = [];
 }
 
-function handleChartCreationAndUpdate(chartName, db_data, property) {
+/*Funzione per gestire creazione o aggiornamento del grafico
+* in base ad un flag impostato sull'html
+* */
+function handleChartCreationAndUpdate(chartName, db_data, property, realtime = false) {
 
     var chart = $('#'.concat(chartName));
     if (chart.hasClass("0")) {
 
-        chart_list.push(createChart(db_data, createDataset(db_data, property), chartName));
+        chart_list.push(createChart(db_data, createDataset(db_data, property, realtime), chartName));
         chart.attr("class", "1");
 
     } else {
 
         chart_list.forEach(c => {
-            if(c.canva_name === chartName){
+            if (c.canva_name === chartName) {
                 removeData(c.chart);
-                addData(c.chart, db_data.map(r => r.timestamp), createDataset(db_data, property));
+                addData(c.chart, db_data.map(r => r.timestamp), createDataset(db_data, property, realtime));
             }
         })
 
     }
 }
 
+/*Crea il grafico*/
 function createChart(sys_data, dataset, title) {
     var elem = document.getElementById(title);
 
@@ -42,7 +45,6 @@ function createChart(sys_data, dataset, title) {
         {
             type: 'line',
             data: {
-                labels: sys_data.map(row => row.timestamp),
                 datasets: []
             },
             options: {
@@ -59,16 +61,16 @@ function createChart(sys_data, dataset, title) {
     chart.data.datasets = dataset;
     chart.update();
 
-    return new CustomChart(title,chart);
+    return new CustomChart(title, chart);
 }
 
+/*Aggiunge dati al grafico*/
 function addData(chart, label, newData) {
     chart.data.labels = label;
     chart.data.datasets = newData;
     chart.update();
 
-}
-
+}/*Rimuove dati dal grafico*/
 function removeData(chart) {
 
     chart.data.labels = [];
@@ -87,23 +89,25 @@ function getBorderColor(id) {
     return color_map.get(id);
 }
 
-/* Gateway === Dataset
-    192.168.1.12 -> sys_data: tutti i dati relativi alla ram usage
- */
-function Gateway(id, sys_data) {
+
+function Dataset(id, sys_data) {
     this.label = id;
     this.data = sys_data
 
     this.fill = false;
     this.tension = 0.1;
     this.showLine = true;
-    this.borderColor =  getBorderColor(id);
+    this.borderColor = getBorderColor(id);
 }
 
-function createDataset(db_data, property) {
+
+/*
+* Crea un array pieno dei dati necessari al grafico
+* */
+function createDataset(db_data, property, realtime) {
 
     var dataset = [];
-    const map = new Map();
+    var map = new Map();
 
     function fillMapAndReplace(obj, id, property, toReplace) {
         if (!map.has(id)) {
@@ -118,8 +122,8 @@ function createDataset(db_data, property) {
             }
         );
 
-        if(!color_map.has(id)){
-            color_map.set(id,getRandomRgbColor());
+        if (!color_map.has(id)) {
+            color_map.set(id, getRandomRgbColor());
         }
     }
 
@@ -137,9 +141,82 @@ function createDataset(db_data, property) {
         }
 
     });
-    map.forEach((value, key) => dataset.push(new Gateway(key, value) ));
+
+
+    map = transform(map, property, realtime);
+
+
+    map.forEach((value, key) => dataset.push(new Dataset(key, value)));
     console.log(dataset);
     return dataset;
 
 }
+/*
+* Questa funzione ha due funzioni:
+* per i grafici realtime trasforma i timestamp in secondi
+* per i grafici sull'utilizzo di rete trasforma i dati affinchè
+* mostrino la differenza di traffico e non i bytes effettivamente ricevuti e trasmessi
+*
+* */
+function transform(map, property, realtime) {
+    const arr = Array.from(map);
+    console.log(arr);
+    var newMap = new Map();
 
+    for (let i = 0; i < arr.length; i++) {
+
+        var [id, data_arr] = arr[i];
+        console.log(i);
+
+        if (!newMap.has(id)) {
+            newMap.set(id, []);
+        }
+        var firstDate;
+
+        for (let j = 0; j < data_arr.length; j++) {
+
+            var obj1;
+            var obj2;
+
+            if (j == data_arr.length - 1) {
+                obj1 = data_arr[j - 1];
+                obj2 = data_arr[j];
+            } else {
+                obj1 = data_arr[j];
+                obj2 = data_arr[j + 1];
+            }
+
+
+            var newY = data_arr[j].y;
+            if (property == "net") {
+
+                if (obj2.y >= obj1.y) {
+                    newY = obj2.y - obj1.y;
+                } else {
+                    newY = obj1.y - obj2.y;
+                }
+            }
+
+            var newX = data_arr[j].x;
+            if (realtime) {
+
+
+                var referenceDate = new Date(obj2.x);
+                if (j == 0) {
+                    firstDate = referenceDate;
+                }
+                newX = Math.abs((referenceDate - firstDate) / 1000);
+                newX = newX.toString() + "s";
+            }
+
+            const newVal = {
+                x: newX,
+                y: newY
+            }
+
+            newMap.get(id).push(newVal);
+        }
+
+    }
+    return newMap;
+}
