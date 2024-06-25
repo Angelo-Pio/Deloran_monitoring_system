@@ -66,7 +66,7 @@ function createChart(sys_data, dataset, title) {
 
 /*Aggiunge dati al grafico*/
 function addData(chart, label, newData) {
-    chart.data.labels = label;
+    // chart.data.labels = label;
     chart.data.datasets = newData;
     chart.update();
 
