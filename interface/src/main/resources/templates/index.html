@@ -12,7 +12,6 @@
     <style>
 
 
-
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -54,12 +53,7 @@
             text-decoration: underline;
         }
 
-        .container {
-            margin-top: 70px;
-            padding: 20px;
-            background-color: #f2f2f2;
-            border-radius: 10px;
-        }
+
     </style>
 </head>
 <body class="grid ">
@@ -69,12 +63,13 @@
         <div class="navbar-links">
             <a th:href="@{/}">Home</a>
             <a th:href="@{/realtime}">Realtime graphs</a>
+            <a th:href="@{/packets}">Packets Analysis</a>
         </div>
     </div>
 </div>
-<div class="container">
+<div class="shadow-lg ring-1 ring-black ring-opacity-5 bg-grey my-20 mx-5  p-4">
 
-    <h1 id="A1"> Deloran Monitoring system </h1>
+    <p> This is the deloran monitoring interface. Here you can visualize info about your gateway resources  stats such as RAM;CPU and Network Resources, you can choose the timeslot of interest or visualize the last five minutes info clicking on the submit button (leaving date selectors empty)</p>
 
 
 </div>
@@ -86,13 +81,13 @@
 
         <div class="grid grid-cols-2 grid-rows-2 gap-2  flex p-5 justify-center">
 
-            <div class="col-span-1 shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
+            <div class="col-span-1 shadow-lg ring-1 h-1/2 ring-black ring-opacity-5 m-2 p-2">
 
                 <label for="start_time">START</label>
                 <input type="datetime-local" id="start_time">
             </div>
 
-            <div class="col-span-1 shadow-lg ring-1 ring-black ring-opacity-5 m-2 p-2">
+            <div class="col-span-1 shadow-lg ring-1 h-1/2 ring-black ring-opacity-5 m-2 p-2">
 
                 <label for="end_time">END</label>
                 <input type="datetime-local" id="end_time">
@@ -102,7 +97,8 @@
             <br>
 
             <!--Check box drop down menu-->
-            <div class="col-span-2  justify-self-center w-auto  relative inline-block text-right ml-12">
+            <div th:if="${gateways_ids.size() > 1}"
+                 class="col-span-2  justify-self-center w-auto  relative inline-block text-right ml-12">
                 <div>
                     <button id="dropdownButton" type="button"
                             class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -136,16 +132,18 @@
 
 
             <div class="mt-4 inline-block w-auto justify-self-center col-span-1 ">
-                <button id="submit"
-                        class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Submit
-                </button>
-            </div>
-            <div class="mt-4 inline-block w-auto justify-self-center col-span-1 ">
-                <button id="reset"
-                        class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    Reset
-                </button>
+                <div class="mt-4 inline-block w-auto justify-self-center col-span-1 ">
+                    <button id="submit"
+                            class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Submit
+                    </button>
+                </div>
+                <div class="mt-4 inline-block w-auto justify-self-center col-span-1 ">
+                    <button id="reset"
+                            class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Reset
+                    </button>
+                </div>
             </div>
 
         </div>

@@ -1,6 +1,5 @@
 package com.tlc.deloran.model;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -9,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "#{@environment.getProperty('deloran.env.mongodb.collection')}")
+@Document(collection = "#{@environment.getProperty('deloran.env.mongodb.collection.resources')}")
 @Component
-public class Gateway {
+public class Resources {
 
 
     @Id
@@ -33,7 +32,7 @@ public class Gateway {
     private LocalDateTime timestamp;
 
 
-    public Gateway(String _id, String id, String cpu_usage, String ram_usage, String net_usage, LocalDateTime timestamp, String net_tx) {
+    public Resources(String _id, String id, String cpu_usage, String ram_usage, String net_usage, LocalDateTime timestamp, String net_tx) {
         this._id = _id;
         this.id = id;
         this.cpu_usage = cpu_usage;
@@ -45,7 +44,7 @@ public class Gateway {
 
     @Override
     public String toString() {
-        return "Gateway{" +
+        return "Machine Resources{" +
                 "id='" + id + '\'' +
                 ", cpu_usage='" + cpu_usage + '\'' +
                 ", ram_usage='" + ram_usage + '\'' +
@@ -55,7 +54,7 @@ public class Gateway {
                 '}';
     }
 
-    public Gateway() {
+    public Resources() {
     }
 
     public String getNet_tx() {

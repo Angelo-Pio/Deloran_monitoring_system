@@ -2,15 +2,13 @@ package com.tlc.deloran.service;
 
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoClient;
-import com.tlc.deloran.model.Gateway;
+import com.tlc.deloran.model.Resources;
 import com.tlc.deloran.repository.IntRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
@@ -27,28 +25,28 @@ public class IntService {
     @Autowired
     private MongoClient mongo;
 
-    public List<Gateway> getAllGateways(){
+    public List<Resources> getAllResources(){
         return intRepository.findAll();
     }
 
     // Main method
-    public List<Gateway> getAllByIdAndTimestamp(String[] id, LocalDateTime start, LocalDateTime end){
+    public List<Resources> getAllByIdAndTimestamp(String[] id, LocalDateTime start, LocalDateTime end){
 
 
        /* start = start != null ? toUTC(start) : null;
         end = end != null ? toUTC(end) : null;*/
-        List<Gateway> gateways = new LinkedList<>();
+        List<Resources> gateways = new LinkedList<>();
         if(id == null){
-            gateways = getAllGatewaysByTimestamp(start, end);
+            gateways = getAllResourcesByTimestamp(start, end);
         } else if (id.length == 0) {
-            gateways = getAllGatewaysByTimestamp(start, end);
+            gateways = getAllResourcesByTimestamp(start, end);
         } else{
-            gateways =  getAllGatewaysById(id,start,end);
+            gateways =  getAllResourcesById(id,start,end);
         }
         return gateways;
     }
 
-    public List<Gateway> getAllGatewaysByTimestamp(LocalDateTime start, LocalDateTime end){
+    public List<Resources> getAllResourcesByTimestamp(LocalDateTime start, LocalDateTime end){
 
 //        If both null give last hour info
 //        if end null give all from start to now
@@ -71,7 +69,7 @@ public class IntService {
 
 
 
-    private List<Gateway> getAllGatewaysById(String[] id, LocalDateTime start, LocalDateTime end) {
+    private List<Resources> getAllResourcesById(String[] id, LocalDateTime start, LocalDateTime end) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime last5Minutes = now.minusMinutes(5);
         if(start == null && end == null){

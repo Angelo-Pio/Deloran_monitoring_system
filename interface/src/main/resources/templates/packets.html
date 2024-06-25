@@ -83,8 +83,8 @@
 
 
             <!--Check box drop down menu-->
-            <div th:if="${gateways_ids.size() > 1}" class="col-span-2  justify-self-center w-auto  relative inline-block text-right ml-12">
-                <div >
+            <div  th:if="${gateways_ids.size() > 1}"  class="col-span-2  justify-self-center w-auto  relative inline-block text-right ml-12">
+                <div>
                     <button id="dropdownButton" type="button"
                             class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             aria-expanded="true" aria-haspopup="true">
@@ -136,14 +136,9 @@
     <div class="w-11/12 p-5 m-10 justify-self-center rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
         <div class="chart w-full">
-            <canvas id="CPU_Usage" class="0"></canvas>
+            <canvas id="PACKETS_TRAFFIC" class="0"></canvas>
         </div>
-        <div class="chart w-full">
-            <canvas id="RAM_Usage" class="0"></canvas>
-        </div>
-        <div class="chart w-full">
-            <canvas id="NET_Usage" class="0"></canvas>
-        </div>
+
     </div>
 
 <script>
@@ -153,7 +148,7 @@
     });
 </script>
 <script type="application/javascript" th:src="@{js/aux.js}"></script>
-<script type="application/javascript" th:src="@{js/realtime.js}"></script>
+<!--<script type="application/javascript" th:src="@{js/packets.js}"></script>-->
 </body>
 
 </html>

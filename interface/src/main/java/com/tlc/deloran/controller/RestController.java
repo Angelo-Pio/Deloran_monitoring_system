@@ -1,6 +1,6 @@
 package com.tlc.deloran.controller;
 
-import com.tlc.deloran.model.Gateway;
+import com.tlc.deloran.model.Resources;
 import com.tlc.deloran.service.IntService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,21 +18,21 @@ public class RestController {
     private IntService intService;
 
     @GetMapping("/getByTimestamp")
-    public List<Gateway> getByTimestamp(
+    public List<Resources> getByTimestamp(
             @RequestParam(value = "start",required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(value = "end",required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end){
-        return intService.getAllGatewaysByTimestamp(start, end);
+        return intService.getAllResourcesByTimestamp(start, end);
     }
 
     @GetMapping("/getAll")
-    public List<Gateway> getAll(){
-        return intService.getAllGateways();
+    public List<Resources> getAll(){
+        return intService.getAllResources();
     }
 
     @GetMapping("/getAllById&Timestamp")
-    public List<Gateway> getAllByIdAndTimestamp(
+    public List<Resources> getAllByIdAndTimestamp(
             @RequestParam(value = "start",required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(value = "end",required = false)
