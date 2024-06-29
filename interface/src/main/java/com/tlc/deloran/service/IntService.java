@@ -85,7 +85,6 @@ public class IntService {
     }
 
 
-    //TODO collection name not hardcoded
     public List<String> getAllIds() {
         DistinctIterable<String> distinctIterable = mongoTemplate.getCollection("gateway").distinct("Id", String.class);
         LinkedList<String> list = new LinkedList<>();
@@ -95,8 +94,6 @@ public class IntService {
         return list;
     }
 
-    /*public LocalDateTime toUTC(LocalDateTime date){
-        ZonedDateTime utc = date.atZone(ZoneId.of("Europe/Rome")).withZoneSameInstant(ZoneId.of("UTC"));
-        return utc.toLocalDateTime();
-    }*/
+    
+
 }

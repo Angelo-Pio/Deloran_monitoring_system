@@ -44,6 +44,21 @@ public class IntCotroller {
 
 
         List<Resources> gateways = intService.getAllResources();
+
+
+        //Restituisci un'insieme di oggetti Packet (timestamp + json)
+        //Calcola quanti packets sono arrivati in un intervallo di 5 secondi e restituisci il numero -> front end ?
+
+        // TO SOLVE
+        /*
+        * Mock up dei pacchetti nel ResourceExtractor -> nuova coda in rabbitmq
+        * Salvataggio dei pacchetti nel db
+        * Extrazione del Packet e passaggio a front end
+        * Generazione del grafico lato front end, calcolare Dataset lato backend? -> like:
+        * now: 12:50:55 -> last five minutes 12:45:55
+        *
+        * */
+
         model.addAttribute("gateways", gateways);
         model.addAttribute("gateways_ids", intService.getAllIds());
 

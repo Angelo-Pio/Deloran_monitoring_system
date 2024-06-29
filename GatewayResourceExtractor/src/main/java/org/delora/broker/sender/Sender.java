@@ -7,7 +7,6 @@ import org.delora.broker.Costants;
 
 import java.text.MessageFormat;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 public class Sender {
@@ -19,10 +18,10 @@ public class Sender {
         factory.setHost(costants.HOST);
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(costants.QUEUE_NAME, false, false, false, null);
+            channel.queueDeclare(costants.SYS_RESOURCES_QUEUE, false, false, false, null);
 
             String message = produceMessage();
-            channel.basicPublish("",costants.QUEUE_NAME, null, message.getBytes());
+            channel.basicPublish("",costants.SYS_RESOURCES_QUEUE, null, message.getBytes());
             System.out.println(" [x] Sent '" + message + "'");
         }catch (Exception e){
             e.printStackTrace();

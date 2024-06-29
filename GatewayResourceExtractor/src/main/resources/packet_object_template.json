@@ -1,0 +1,51 @@
+{
+  "timestamp": "",
+  "packet": {
+    "mhdr": {
+      "mtype": "JoinAccept",
+      "rfu": 0,
+      "major": "R1"
+    },
+    "payload": {
+      "JoinAccept": {
+        "join_req_type": "JoinRequest",
+        "join_nonce": [
+          170,
+          8,
+          69
+        ],
+        "home_net_id": [
+          96,
+          0,
+          8
+        ],
+        "dev_addr": [
+          224,
+          16,
+          55,
+          24
+        ],
+        "dl_settings": 128,
+        "rx_delay": 1,
+        "cf_list": [
+          24,
+          79,
+          132,
+          184,
+          94,
+          132,
+          136,
+          102,
+          132,
+          88,
+          110,
+          132,
+          232,
+          86,
+          132,
+          0
+        ]
+      }
+    }
+  }
+}

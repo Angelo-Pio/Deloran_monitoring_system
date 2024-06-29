@@ -3,12 +3,13 @@ package org.delora.broker;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import org.delora.broker.sender.Sender;
+import org.delora.broker.mockup.Mocker;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
 
 public class Main {
 
@@ -17,18 +18,26 @@ public class Main {
 
     public static void main(String[] args) {
         //Connection to rabbitmq
+        try {
+            List<String> strings = Mocker.genericPacketList();
+            for (String string : strings) {
+                System.out.println(string);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(costants.HOST);
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(costants.QUEUE_NAME, false, false, false, null);
+            channel.queueDeclare(costants.SYS_RESOURCES_QUEUE, false, false, false, null);
 
             //Read system info and produce a message to send to the broker
             while (true) {
                 String message = getSystemInfo();
-                channel.basicPublish("", costants.QUEUE_NAME, null, message.getBytes());
-                System.out.println(" [x] Sent '" + message + "'");
+                channel.basicPublish("", costants.SYS_RESOURCES_QUEUE, null, message.getBytes());
+                System.out.println(" [x] Sent '" + message + "'" + "to queue: " + costants.SYS_RESOURCES_QUEUE);
                 Thread.sleep(costants.READING_INTERVAL);
             }
         } catch (Exception e) {
