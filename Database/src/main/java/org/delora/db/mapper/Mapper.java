@@ -1,6 +1,7 @@
 package org.delora.db.mapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.Document;
@@ -14,14 +15,13 @@ import java.util.List;
 
 public class Mapper {
 
-    private ObjectMapper mapper;
 
     /*
             Trasforma il messaggio dal broker in un'oggetto manipolabile
              */
     public List<Resource> JsonToResourceModel(String JSON) {
 
-        mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode node = null;
         List<Resource> resource = new LinkedList<>();
         try {
@@ -87,22 +87,29 @@ public class Mapper {
 
     public List<Document> JsonToListOfPackets(String message) {
 
-        if(message == null){
+        ObjectMapper mapper = new ObjectMapper();
+        if (message == null) {
             return List.of();
         }
         List<Document> packet_list = new LinkedList<>();
 
         try {
-            JsonNode node = mapper.readTree(message);
+            JsonNode array = mapper.readTree(message);
 
-            for (int i = 0; i < node.size(); i++) {
-                packet_list.add(Document.parse(node.get(i).asText()));
+            if (array.isArray()) {
+
+                for (JsonNode node : array) {
+                    String text = node.toString();
+                    Document doc = Document.parse(text);
+                    packet_list.add(doc);
+                }
             }
 
             System.out.println(packet_list.toString());
             return packet_list;
 
-        } catch (JsonProcessingException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 

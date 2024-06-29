@@ -31,11 +31,11 @@ public class Main {
 
 
 //            channel.queueDeclare(costants.SYS_RESOURCES_QUEUE, false, false, false, null);
-                String packetsInfo = Mocker.genericPacketList();
 
             //Read system info and produce a message to send to the broker
             while (true) {
                 String systemInfo = getSystemInfo();
+                String packetsInfo = Mocker.genericPacketList();
 
 
 //                channel.basicPublish("", costants.SYS_RESOURCES_QUEUE, null, systemInfo.getBytes());

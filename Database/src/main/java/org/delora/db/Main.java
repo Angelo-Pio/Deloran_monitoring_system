@@ -46,7 +46,7 @@ public class Main {
 
         // Receive messages from rabbitmq
         try {
-            receive(resources_collection, mongoClient);
+            receive();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -65,7 +65,7 @@ public class Main {
 
     }
 
-    public static void receive(MongoCollection<Document> collection, MongoClient mongoClient) throws Exception {
+    public static void receive() throws Exception {
 
 
         ConnectionFactory factory = new ConnectionFactory();
@@ -86,9 +86,17 @@ public class Main {
         packets_channel.queueDeclare(costants.PACKETS_RECEIVED_INFO, true, false, false, null);
         packets_channel.queueBind(costants.PACKETS_RECEIVED_INFO, costants.DELORAN_MONITORING_SYSTEM_EXCHANGE, costants.PACKETS_RK);
 
-        deliverCallback(resource_channel, costants.SYSTEM_RESOURCES_INFO);
-        deliverCallback(packets_channel, costants.PACKETS_RECEIVED_INFO);
+        Runnable resourceConsumer = () -> {
 
+            deliverCallback(packets_channel, costants.PACKETS_RECEIVED_INFO);
+        };
+        Runnable packetsConsumer = () -> {
+
+        deliverCallback(resource_channel, costants.SYSTEM_RESOURCES_INFO);
+        };
+
+        new Thread(resourceConsumer).start();
+        new Thread(packetsConsumer).start();
 
     }
 
@@ -97,6 +105,7 @@ public class Main {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
             System.out.println(" [x] Received '" + message + "'");
 
+            InsertManyOptions options = new InsertManyOptions().ordered(false).bypassDocumentValidation(true);
             if (queue_name.equals(costants.SYSTEM_RESOURCES_INFO)) {
 
                 //Create a list of Gateway objects from the JSON
@@ -107,28 +116,29 @@ public class Main {
 
                 //Store the Documents in the db
 
-                InsertManyOptions options = new InsertManyOptions().ordered(false).bypassDocumentValidation(true);
 
                 try {
                     InsertManyResult results = resources_collection.insertMany(docs, options);
 
                 } catch (MongoException e) {
+                    e.printStackTrace();
                     System.out.println(e.getMessage());
 
                 }
             }
-            if(queue_name.equals(costants.PACKETS_RECEIVED_INFO)){
-                List<Document> packets = mapper.JsonToListOfPackets(message);
+            if (queue_name.equals(costants.PACKETS_RECEIVED_INFO)) {
 
-                packets_collection.insertMany(packets);
+                List<Document> packets = mapper.JsonToListOfPackets(message);
+                packets_collection.insertMany(packets, options);
             }
 
 
         };
         try {
-            channel.basicConsume(SYSTEM_RESOURCES_INFO, true, deliverCallback, consumerTag -> {
+            channel.basicConsume(queue_name, true, deliverCallback, consumerTag -> {
             });
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

@@ -18,7 +18,7 @@ public class Mocker {
         InputStream inputStream = Costants.class.getClassLoader().getSystemResourceAsStream("packet_object_template.json");
         ObjectNode node = (ObjectNode) mapper.readTree(inputStream);
         Random rand = new Random();
-        StringBuilder ret = new StringBuilder("{");
+        StringBuilder ret = new StringBuilder("[");
         for (int i = 0; i < 50; i++) {
 
             node.put("timestamp", LocalDateTime.now().toString());
@@ -29,7 +29,8 @@ public class Mocker {
 //            Thread.sleep(rand.nextInt(10)*100);
 
         }
-        ret.append("}");
+        ret.append("]");
+        System.out.println(ret.toString());
         return ret.toString();
 
     }
