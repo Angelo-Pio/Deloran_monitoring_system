@@ -1,46 +1,45 @@
 package org.delora.db.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.Document;
-import org.delora.db.Model.Gateway;
+import org.delora.db.Model.Resource;
 
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Mapper {
 
-    /*
-    Trasforma il messaggio dal broker in un'oggetto manipolabile
-     */
-    public List<Gateway> JsonToGatewayModel(String JSON) {
+    private ObjectMapper mapper;
 
-        ObjectMapper mapper = new ObjectMapper();
+    /*
+            Trasforma il messaggio dal broker in un'oggetto manipolabile
+             */
+    public List<Resource> JsonToResourceModel(String JSON) {
+
+        mapper = new ObjectMapper();
         JsonNode node = null;
-        List<Gateway> gateways = new LinkedList<>();
+        List<Resource> resource = new LinkedList<>();
         try {
             node = mapper.readTree(JSON);
 
             if (!node.isArray()) {
-                gateways.add(createGateway(node));
+                resource.add(createGateway(node));
             } else {
                 int size = node.size();
                 for (int i = 0; i < size; i++) {
-                    gateways.add(createGateway(node.get(i)));
-                    System.out.println("gateway" + String.valueOf(i) + " created");
+                    resource.add(createGateway(node.get(i)));
+                    System.out.println("resource" + String.valueOf(i) + " created");
                 }
 
             }
-            System.out.println("gateways list created");
+            System.out.println("resource list created");
 
-            return gateways;
+            return resource;
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
@@ -49,28 +48,28 @@ public class Mapper {
 
     }
 
-    private static Gateway createGateway(JsonNode node) {
-        Gateway gateway = new Gateway();
+    private static Resource createGateway(JsonNode node) {
+        Resource resource = new Resource();
 
-        gateway.setCpu_usage(node.get("cpu_usage").asText());
-        gateway.setRam_usage(node.get("ram_usage").asText());
+        resource.setCpu_usage(node.get("cpu_usage").asText());
+        resource.setRam_usage(node.get("ram_usage").asText());
         LocalDateTime timestamp = LocalDateTime.parse(node.get("timestamp").asText(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         timestamp = timestamp.atZone(ZoneId.of("Europe/Rome")).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
-        gateway.setTimestamp(timestamp);
-        gateway.setId(node.get("Id").asText());
+        resource.setTimestamp(timestamp);
+        resource.setId(node.get("Id").asText());
 
         JsonNode net_usage = node.path("net_usage");
-        gateway.setNet_rx(net_usage.path("RX").asText());
-        gateway.setNet_tx(net_usage.path("TX").asText());
+        resource.setNet_rx(net_usage.path("RX").asText());
+        resource.setNet_tx(net_usage.path("TX").asText());
 
-        return gateway;
+        return resource;
     }
 
     //Create the document, refer to Model>Gateway for object schema
-    public List<Document> createDoc(List<Gateway> gateways) {
+    public List<Document> createDoc(List<Resource> resource) {
 
         List<Document> docs = new LinkedList<>();
-        for (Gateway g : gateways) {
+        for (Resource g : resource) {
 
             Document doc = new Document(
                     "Id", g.getId())
@@ -84,5 +83,28 @@ public class Mapper {
         }
         System.out.println("docs created, ready to save into db");
         return docs;
+    }
+
+    public List<Document> JsonToListOfPackets(String message) {
+
+        if(message == null){
+            return List.of();
+        }
+        List<Document> packet_list = new LinkedList<>();
+
+        try {
+            JsonNode node = mapper.readTree(message);
+
+            for (int i = 0; i < node.size(); i++) {
+                packet_list.add(Document.parse(node.get(i).asText()));
+            }
+
+            System.out.println(packet_list.toString());
+            return packet_list;
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

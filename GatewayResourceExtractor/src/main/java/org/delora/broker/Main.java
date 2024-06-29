@@ -18,26 +18,35 @@ public class Main {
 
     public static void main(String[] args) {
         //Connection to rabbitmq
-        try {
-            List<String> strings = Mocker.genericPacketList();
-            for (String string : strings) {
-                System.out.println(string);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
 
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(costants.HOST);
         try (Connection connection = factory.newConnection();
              Channel channel = connection.createChannel()) {
-            channel.queueDeclare(costants.SYS_RESOURCES_QUEUE, false, false, false, null);
+
+            //Declare the exchange
+            channel.exchangeDeclare(costants.DELORAN_MONITORING_SYSTEM_EXCHANGE,"topic");
+
+
+
+//            channel.queueDeclare(costants.SYS_RESOURCES_QUEUE, false, false, false, null);
+                String packetsInfo = Mocker.genericPacketList();
 
             //Read system info and produce a message to send to the broker
             while (true) {
-                String message = getSystemInfo();
-                channel.basicPublish("", costants.SYS_RESOURCES_QUEUE, null, message.getBytes());
-                System.out.println(" [x] Sent '" + message + "'" + "to queue: " + costants.SYS_RESOURCES_QUEUE);
+                String systemInfo = getSystemInfo();
+
+
+//                channel.basicPublish("", costants.SYS_RESOURCES_QUEUE, null, systemInfo.getBytes());
+
+                //Public sys resources to basic exchange with routing key for resources queu
+                channel.basicPublish(costants.DELORAN_MONITORING_SYSTEM_EXCHANGE, costants.RESOURCES_RK, null, systemInfo.getBytes());
+
+                channel.basicPublish(costants.DELORAN_MONITORING_SYSTEM_EXCHANGE, costants.PACKETS_RK, null, packetsInfo.getBytes());
+
+
+                System.out.println(" [x] Sent '" + systemInfo + "'");
                 Thread.sleep(costants.READING_INTERVAL);
             }
         } catch (Exception e) {

@@ -2,7 +2,7 @@ package org.delora.db.Model;
 
 import java.time.LocalDateTime;
 
-public class Gateway {
+public class Resource {
 
     private String id;
     private String cpu_usage;
@@ -12,7 +12,7 @@ public class Gateway {
     private LocalDateTime timestamp;
 
 
-    public Gateway(String id, String cpu_usage, String ram_usage, String net_usage, LocalDateTime timestamp, String net_tx) {
+    public Resource(String id, String cpu_usage, String ram_usage, String net_usage, LocalDateTime timestamp, String net_tx) {
         this.id = id;
         this.cpu_usage = cpu_usage;
         this.ram_usage = ram_usage;
@@ -22,7 +22,7 @@ public class Gateway {
     }
 
 
-    public Gateway() {
+    public Resource() {
     }
 
     public String getNet_tx() {
