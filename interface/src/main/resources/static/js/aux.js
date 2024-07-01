@@ -15,6 +15,7 @@ function destroyCharts() {
 
 /*Funzione per gestire creazione o aggiornamento del grafico
 * in base ad un flag impostato sull'html
+* se property == packets allora db_data è un array costituito da oggetti {timestamp,packet} dove packet deve essere deserializzato con JSON.parse()
 * */
 function handleChartCreationAndUpdate(chartName, db_data, property, realtime = false) {
 
@@ -101,14 +102,7 @@ function Dataset(id, sys_data) {
 }
 
 
-/*
-* Crea un array pieno dei dati necessari al grafico
-* */
-function createDataset(db_data, property, realtime) {
-
-    var dataset = [];
-    var map = new Map();
-
+function resourcesDatasetGeneration(map, db_data, property, realtime) {
     function fillMapAndReplace(obj, id, property, toReplace) {
         if (!map.has(id)) {
             map.set(id, []);
@@ -137,13 +131,28 @@ function createDataset(db_data, property, realtime) {
 
             fillMapAndReplace(o, o.id + "rx", "net_rx", ' bytes');
             fillMapAndReplace(o, o.id + "tx", "net_tx", ' bytes');
-
         }
 
     });
 
 
-    map = transform(map, property, realtime);
+    return transform(map, property, realtime);
+}
+
+/*
+* Crea un array pieno dei dati necessari al grafico
+* */
+function createDataset(db_data, property, realtime) {
+
+    var dataset = [];
+    var map = new Map();
+
+
+    if (property == "packets") {
+        map = packetsDatasetGeneration(map, db_data);
+    } else {
+        map = resourcesDatasetGeneration(map, db_data, property, realtime);
+    }
 
 
     map.forEach((value, key) => dataset.push(new Dataset(key, value)));
@@ -151,6 +160,7 @@ function createDataset(db_data, property, realtime) {
     return dataset;
 
 }
+
 /*
 * Questa funzione ha due funzioni:
 * per i grafici realtime trasforma i timestamp in secondi
@@ -206,8 +216,9 @@ function transform(map, property, realtime) {
                     firstDate = referenceDate;
                 }
                 newX = Math.abs((referenceDate - firstDate) / 1000);
-                newX = newX.toString() + "s";
             }
+                // ! IMPORTANTE
+                newX = newX.toString() + "s";
 
             const newVal = {
                 x: newX,
@@ -219,4 +230,61 @@ function transform(map, property, realtime) {
 
     }
     return newMap;
+}
+
+
+/*
+*  Lista di packets, ognuno con timestamp e vari dati del packet
+*  Interesse: numero di packets nell'intervallo di 5 secondi
+* Map :{ id , [{x:timestamp,y:valore}] }
+* List<Packet> = [{timestamp,packet}]
+* Usare data come un insieme su cui ragionare per svuotamento
+*  */
+function packetsDatasetGeneration(map, data) {
+
+    // Crea una mappa: timestamp -> packet
+    var packets = new Map(data.map(i => [new Date(i.timestamp), JSON.parse(i.packet)]));
+
+    var graphPackets = new Map();
+
+    var baseTime = null;
+    var rangeTime = null;
+    var counter = 0;
+
+    packets.forEach(
+        (v, k) => {
+            if (baseTime != null && rangeTime != null) {
+
+                if (baseTime <= k && k <= rangeTime) {
+                    counter++;
+                    // map.delete(k);
+                } else {
+                    baseTime = k;
+                    rangeTime = new Date(baseTime.getTime() + 5000);
+                    graphPackets.set(k, counter);
+                }
+            } else {
+                baseTime = k;
+                rangeTime = new Date(baseTime.getTime() + 5000);
+                graphPackets.set(k, counter);
+            }
+        }
+    )
+    var res = new Map();
+    res.set("mock",[]);
+
+    arr = Array.from(graphPackets);
+
+    //TODO: modifica transform e crea una soluzione adatta anche a questo caso
+
+    graphPackets.forEach(
+        (v,k) => {
+            var newX = k / 1000;
+            newX = newX + "s"
+            res.get("mock").push({x:newX,y:v});
+
+        }
+    )
+
+    return res;
 }

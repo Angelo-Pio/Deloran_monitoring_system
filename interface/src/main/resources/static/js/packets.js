@@ -3,7 +3,7 @@ var chart_list = [];
 var interval_id = null;
 
 $(document).ready(function () {
-    $('#gateway_data').submit(function (event) {
+    $('#packet_data').submit(function (event) {
         event.preventDefault();
 
 
@@ -21,7 +21,7 @@ function generateGraphs() {
     });
 
     $.ajax({
-        url: '/resources/getAllById&Timestamp',
+        url: '/packets/getAll',
         type: 'GET',
         data: {
             id: gateway_id_list,
@@ -30,9 +30,9 @@ function generateGraphs() {
         },
         success: function (data) {
             // Assuming data is an array of objects
-            console.log(data);
+            console.log(JSON.parse(data[0].packet));
             if (data.length !== 0) {
-                handleChartCreationAndUpdate("PACKETS_TRAFFIC", data, "cpu_usage",true);
+                handleChartCreationAndUpdate("PACKETS_TRAFFIC", data, "packets",true);
                 disableAnimation();
             }else{
                 destroyCharts();

@@ -76,44 +76,9 @@
 
 <div class="w-1/2 justify-self-center">
 
-    <form id="gateway_data" class=" m-10 bg-white shadow-lg ring-1 ring-black ring-opacity-5   place-content-evenly">
+    <form id="packet_data" class=" m-10 bg-white shadow-lg ring-1 ring-black ring-opacity-5   place-content-evenly">
 
         <div class="grid grid-cols-2 grid-rows-2 gap-2  flex p-5 justify-center">
-
-
-
-            <!--Check box drop down menu-->
-            <div  th:if="${gateways_ids.size() > 1}"  class="col-span-2  justify-self-center w-auto  relative inline-block text-right ml-12">
-                <div>
-                    <button id="dropdownButton" type="button"
-                            class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            aria-expanded="true" aria-haspopup="true">
-                        Scegli un gateway
-                        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                             fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                  d="M5.293 9.293a1 1 0 011.414 0L10 12.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                </div>
-
-                <div id="dropdownMenu"
-                     class="hidden origin-top-right absolute right-0 mt-2 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div class="py-1 flex items-center" role="menu" aria-orientation="vertical"
-                         aria-labelledby="dropdownButton" th:each="id : ${gateways_ids}">
-                        <div>
-
-                            <label class=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
-                                   th:text="${id}" for="check">
-                            </label>
-                            <input id="check" th:type="checkbox" type="checkbox"
-                                   class="mr-3 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-                                   th:value="${id}">
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
             <div class="mt-4 inline-block w-auto justify-self-center col-span-1 ">
@@ -148,7 +113,7 @@
     });
 </script>
 <script type="application/javascript" th:src="@{js/aux.js}"></script>
-<!--<script type="application/javascript" th:src="@{js/packets.js}"></script>-->
+<script type="application/javascript" th:src="@{js/packets.js}"></script>
 </body>
 
 </html>
