@@ -21,7 +21,7 @@ function generateGraphs() {
     });
 
     $.ajax({
-        url: '/getAllById&Timestamp',
+        url: '/resources/getAllById&Timestamp',
         type: 'GET',
         data: {
             id: gateway_id_list,

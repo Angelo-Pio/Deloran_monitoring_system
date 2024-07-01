@@ -1,7 +1,9 @@
 package com.tlc.deloran.controller;
 
+import com.tlc.deloran.model.Packet;
 import com.tlc.deloran.model.Resources;
 import com.tlc.deloran.service.IntService;
+import com.tlc.deloran.service.PacketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,34 +19,47 @@ public class RestController {
     @Autowired
     private IntService intService;
 
-    @GetMapping("/getByTimestamp")
+    @Autowired
+    private PacketService packetService;
+
+    @GetMapping("/resources/getByTimestamp")
     public List<Resources> getByTimestamp(
-            @RequestParam(value = "start",required = false)
+            @RequestParam(value = "start", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(value = "end",required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end){
+            @RequestParam(value = "end", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return intService.getAllResourcesByTimestamp(start, end);
     }
 
-    @GetMapping("/getAll")
-    public List<Resources> getAll(){
+    @GetMapping("/resources/getAll")
+    public List<Resources> getAll() {
         return intService.getAllResources();
     }
 
-    @GetMapping("/getAllById&Timestamp")
+    @GetMapping("/resources/getAllById&Timestamp")
     public List<Resources> getAllByIdAndTimestamp(
-            @RequestParam(value = "start",required = false)
+            @RequestParam(value = "start", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(value = "end",required = false)
+            @RequestParam(value = "end", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
-            @RequestParam(value = "id",required = false) String[] id
-    ){
+            @RequestParam(value = "id", required = false) String[] id
+    ) {
         return intService.getAllByIdAndTimestamp(id, start, end);
     }
 
-    @GetMapping("/getAllIds")
+    @GetMapping("/resources/getAllIds")
     public List<String> getAllIds() {
         return intService.getAllIds();
+    }
+
+    @GetMapping("/packets/getAllLastFiveMinutesPackets")
+    public List<Packet> getAllLastFiveMinutesPackets() {
+        return packetService.getAllLastFiveMinutesPackets();
+    }
+
+    @GetMapping("/packets/getAll")
+    public List<Packet> getAllPackets() {
+        return packetService.getAllPackets();
     }
 
 
