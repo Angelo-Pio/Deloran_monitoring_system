@@ -173,21 +173,23 @@ function transform(map, property, realtime) {
     console.log(arr);
     var newMap = new Map();
 
+    // Iterate through all the map {id: "id", data_Arr : [{x,y}]}
     for (let i = 0; i < arr.length; i++) {
 
         var [id, data_arr] = arr[i];
-        console.log(i);
 
         if (!newMap.has(id)) {
             newMap.set(id, []);
         }
         var firstDate;
 
+        //Do it again
         for (let j = 0; j < data_arr.length; j++) {
 
             var obj1;
             var obj2;
 
+            //If j is last item
             if (j == data_arr.length - 1) {
                 obj1 = data_arr[j - 1];
                 obj2 = data_arr[j];
@@ -197,7 +199,9 @@ function transform(map, property, realtime) {
             }
 
 
+
             var newY = data_arr[j].y;
+            //Calculate Delta between bytes
             if (property == "net") {
 
                 if (obj2.y >= obj1.y) {
@@ -209,8 +213,6 @@ function transform(map, property, realtime) {
 
             var newX = data_arr[j].x;
             if (realtime) {
-
-
                 var referenceDate = new Date(obj2.x);
                 if (j == 0) {
                     firstDate = referenceDate;
@@ -251,13 +253,13 @@ function packetsDatasetGeneration(map, data) {
     var rangeTime = null;
     var counter = 0;
 
+    //Count how many packets are received in a time slot of 5 seconds
     packets.forEach(
         (v, k) => {
             if (baseTime != null && rangeTime != null) {
 
                 if (baseTime <= k && k <= rangeTime) {
                     counter++;
-                    // map.delete(k);
                 } else {
                     baseTime = k;
                     rangeTime = new Date(baseTime.getTime() + 5000);
@@ -273,18 +275,46 @@ function packetsDatasetGeneration(map, data) {
     var res = new Map();
     res.set("mock",[]);
 
-    arr = Array.from(graphPackets);
+    var arr = Array.from(graphPackets);
 
-    //TODO: modifica transform e crea una soluzione adatta anche a questo caso
+    var firstDate;
+    var newX;
+    var newY;
 
-    graphPackets.forEach(
-        (v,k) => {
-            var newX = k / 1000;
-            newX = newX + "s"
-            res.get("mock").push({x:newX,y:v});
+    for (let i = 0; i < arr.length; i++) {
 
+        var [date1,count] = arr[i];
+        var date2;
+
+        if(i+1 < arr.length){
+            date2 = arr[i+1][0];
+        }else{
+            date2 = arr[i][0];
+            date1 = arr[i-1];
         }
-    )
+
+        if(i == 0){
+            firstDate = date1;
+        }
+        var referenceDate = date2;
+
+
+        newX = (referenceDate - firstDate )/1000;
+        newX = newX.toString()+"s";
+
+        newY = count;
+
+
+
+        res.get("mock").push({
+            x: newX,
+            y: newY
+        });
+
+    }
+
+    console.log(res);
+
 
     return res;
 }
