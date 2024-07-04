@@ -6,14 +6,36 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 
 </head>
 <style>
 
 
+    pre {
+        margin: 0;
+        padding: 1em;
+        background: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
     body {
         margin: 0;
         font-family: Arial, sans-serif;
+    }
+
+    .swal-text {
+        background-color: #b4b4b4;
+        padding: 17px;
+        border: 1px solid #000000;
+        display: block;
+        margin: 22px;
+        text-align: center;
+        color: #61534e;
     }
 
     .navbar {

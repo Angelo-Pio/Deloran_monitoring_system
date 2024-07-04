@@ -2,6 +2,7 @@
 var chart_list = [];
 var interval_id = null;
 var packets_db = null;
+var payload_map = new Map();
 
 $(document).ready(function () {
     $('#packet_data').submit(function (event) {
@@ -19,6 +20,9 @@ $(document).ready(function () {
         console.log("GRAPH PAUSED");
         generateTable(packets_db);
     })
+
+
+
 });
 
 function generateGraphs() {
@@ -93,18 +97,45 @@ function generateTable(packets_db) {
     //     $('#table_payload').text(graph_data[0].y);
     // }
 
+    var i = 0;
     packets_db.forEach(p => {
 
         var packet = JSON.parse(p.packet);
 
+        var table_payload = "table_payload_" + i;
+        let packet_json = JSON.stringify(packet,null,2).toString();
+        payload_map.set(table_payload, packet_json);
         var string = "<tr>\n" +
-            "            <td id=\"table_time\">" + p.timestamp +"</td>\n" +
-            "            <td id=\"table_type\">"+ packet.mhdr.mtype + "</td>\n" +
-            "            <td id=\"table_payload\">"+ JSON.stringify(packet).toString() +"</td>\n" +
+            "            <td id=\"table_time\">" + p.timestamp + "</td>\n" +
+            "            <td id=\"table_type\">" + packet.mhdr.mtype + "</td>\n" +
+            "            <td>" + " <button id=" + table_payload + "> Show JSON  </button> </td>\n" +
             "        </tr>";
-        $('#packet_table').append(string)
+        $('#packet_table').append(string);
+
+        i++;
 
     });
 
+    function handleClick(event,json) {
+
+        const formattedJson = JSON.stringify(json, null, 2);
+
+        // Highlight the formatted JSON
+        const highlightedJson = hljs.highlight('json', formattedJson).value;
+
+        Swal.fire({
+            html:  '<pre><code>' + highlightedJson + '</code></pre>',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    payload_map.forEach((v, k) => {
+        $("#" + k).on('click', function (event) {
+            handleClick(event,v);
+        });
+        console.log("ok");
+    });
 
 }
+
+
