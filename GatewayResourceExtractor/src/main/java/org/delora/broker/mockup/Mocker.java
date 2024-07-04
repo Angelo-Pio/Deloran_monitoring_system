@@ -19,11 +19,12 @@ public class Mocker {
         ObjectNode node = (ObjectNode) mapper.readTree(inputStream);
         Random rand = new Random();
         StringBuilder ret = new StringBuilder("[");
-        for (int i = 0; i < 50; i++) {
+        int num  = rand.nextInt(100);
+        for (int i = 0; i < num; i++) {
 
             node.put("timestamp", LocalDateTime.now().toString());
             ret.append(node.toString());
-            if(i < 49){
+            if(i < num-1){
                 ret.append(",");
             }
 //            Thread.sleep(rand.nextInt(10)*100);

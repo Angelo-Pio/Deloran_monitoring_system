@@ -1,6 +1,7 @@
 //List of CustomChart
 var chart_list = [];
 var interval_id = null;
+var packets_db = null;
 
 $(document).ready(function () {
     $('#packet_data').submit(function (event) {
@@ -11,7 +12,15 @@ $(document).ready(function () {
         generateGraphs();
         interval_id = setInterval(generateGraphs, 5000);
     });
+
+    $('#packet_pause').click(function (event) {
+        event.preventDefault();
+        clearInterval(interval_id);
+        console.log("GRAPH PAUSED");
+        generateTable(packets_db);
+    })
 });
+
 function generateGraphs() {
 
     var gateway_id_list = [];
@@ -21,7 +30,7 @@ function generateGraphs() {
     });
 
     $.ajax({
-        url: '/packets/getAll',
+        url: '/packets/getAllLastFiveMinutesPackets',
         type: 'GET',
         data: {
             id: gateway_id_list,
@@ -30,11 +39,12 @@ function generateGraphs() {
         },
         success: function (data) {
             // Assuming data is an array of objects
-            console.log(JSON.parse(data[0].packet));
+            console.log(data);
             if (data.length !== 0) {
-                handleChartCreationAndUpdate("PACKETS_TRAFFIC", data, "packets",true);
+                packets_db = data;
+                handleChartCreationAndUpdate("PACKETS_TRAFFIC", data, "packets", true);
                 disableAnimation();
-            }else{
+            } else {
                 destroyCharts();
             }
 
@@ -51,6 +61,7 @@ function disableAnimation() {
         c.chart.update();
     })
 }
+
 // Reset graphs
 $('#reset').click(function (event) {
     event.preventDefault();
@@ -61,3 +72,39 @@ $('#reset').click(function (event) {
     chart_list = [];
     clearInterval(interval_id);
 })
+
+function generateTable(packets_db) {
+    let graph_data = chart_list[0].chart.data.datasets[0].data;
+    console.log(packets_db);
+
+    // if (graph_data != null) {
+    //     graph_data.forEach(d => {
+    //
+    //         var string = "<tr>\n" +
+    //             "            <td id=\"table_time\">" + d.x +"</td>\n" +
+    //         "            <td id=\"table_quantity\"> " + d.y +  "</td>\n" +
+    //         "            <td id=\"table_type\">type</td>\n" +
+    //         "            <td id=\"table_payload\">payload</td>\n" +
+    //         "        </tr>";
+    //         $('#packet_table').append(string)
+    //     });
+    //
+    //     $('#table_time').text(graph_data[0].x);
+    //     $('#table_payload').text(graph_data[0].y);
+    // }
+
+    packets_db.forEach(p => {
+
+        var packet = JSON.parse(p.packet);
+
+        var string = "<tr>\n" +
+            "            <td id=\"table_time\">" + p.timestamp +"</td>\n" +
+            "            <td id=\"table_type\">"+ packet.mhdr.mtype + "</td>\n" +
+            "            <td id=\"table_payload\">"+ JSON.stringify(packet).toString() +"</td>\n" +
+            "        </tr>";
+        $('#packet_table').append(string)
+
+    });
+
+
+}

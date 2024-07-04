@@ -13,6 +13,6 @@ import java.util.List;
 @Repository
 public interface PacketsRepository extends MongoRepository<Packet,String> {
 
-    @Query("{timestamp: {$gte: ?0, $lte: ?1 }}")
-    List<Packet> findAllByTimestamp(@Param("start") LocalDateTime start , @Param("end") LocalDateTime  end);
+    @Query("{timestamp: {$gte: ?0}}")
+    List<Packet> findAllByTimestamp(@Param("start") LocalDateTime start);
 }

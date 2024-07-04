@@ -156,7 +156,6 @@ function createDataset(db_data, property, realtime) {
 
 
     map.forEach((value, key) => dataset.push(new Dataset(key, value)));
-    console.log(dataset);
     return dataset;
 
 }
@@ -199,7 +198,6 @@ function transform(map, property, realtime) {
             }
 
 
-
             var newY = data_arr[j].y;
             //Calculate Delta between bytes
             if (property == "net") {
@@ -219,8 +217,8 @@ function transform(map, property, realtime) {
                 }
                 newX = Math.abs((referenceDate - firstDate) / 1000);
             }
-                // ! IMPORTANTE
-                newX = newX.toString() + "s";
+            // ! IMPORTANTE
+            newX = newX.toString() + "s";
 
             const newVal = {
                 x: newX,
@@ -273,7 +271,7 @@ function packetsDatasetGeneration(map, data) {
         }
     )
     var res = new Map();
-    res.set("mock",[]);
+    res.set("mock", []);
 
     var arr = Array.from(graphPackets);
 
@@ -281,31 +279,37 @@ function packetsDatasetGeneration(map, data) {
     var newX;
     var newY;
 
+    //Create a map ready for the graph's Dataset that contains {id,[{x:timestamp in second,y:number of packets in a range of 5 seconds}]}
     for (let i = 0; i < arr.length; i++) {
 
-        var [date1,count] = arr[i];
+        var [date1, count] = arr[i];
         var date2;
 
-        if(i+1 < arr.length){
-            date2 = arr[i+1][0];
-        }else{
+        if (i + 1 < arr.length) {
+            date2 = arr[i + 1][0];
+        } else {
             date2 = arr[i][0];
-            date1 = arr[i-1];
+            date1 = arr[i - 1];
         }
 
-        if(i == 0){
+        if (i == 0) {
             firstDate = date1;
         }
         var referenceDate = date2;
 
 
-        newX = (referenceDate - firstDate )/1000;
-        newX = newX.toString()+"s";
+        newX = (referenceDate - firstDate) / 1000;
+        if (newX >= 60) {
+            var minutes = Math.floor(newX / 60);
+            var seconds = Math.floor(newX % 60);
+            newX = minutes.toString() + "m " + seconds.toString() + "s";
+        } else {
+            newX = newX.toString() + "s";
+        }
 
         newY = count;
 
-
-
+//TODO replace mock with gateway id
         res.get("mock").push({
             x: newX,
             y: newY
@@ -318,3 +322,5 @@ function packetsDatasetGeneration(map, data) {
 
     return res;
 }
+
+

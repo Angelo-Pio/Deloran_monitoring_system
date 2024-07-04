@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.bson.Document;
 import org.delora.db.Model.Resource;
 
@@ -99,8 +100,15 @@ public class Mapper {
             if (array.isArray()) {
 
                 for (JsonNode node : array) {
-                    String text = node.toString();
-                    Document doc = Document.parse(text);
+                    String timestamp = node.get("timestamp").asText();
+
+                    ObjectNode n = (ObjectNode) node;
+                    n.remove("timestamp");
+
+                    JsonNode packet = (JsonNode) n;
+                    Document doc = Document.parse(packet.toString());
+                    doc.append("timestamp", LocalDateTime.parse(timestamp,DateTimeFormatter.ISO_LOCAL_DATE_TIME ));
+
                     packet_list.add(doc);
                 }
             }

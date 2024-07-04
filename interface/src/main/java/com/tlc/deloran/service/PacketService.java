@@ -19,7 +19,7 @@ public class PacketService {
     public List<Packet> getAllLastFiveMinutesPackets(){
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime last5Minutes = now.minusMinutes(5);
-        return repo.findAllByTimestamp(last5Minutes,now);
+        return repo.findAllByTimestamp(last5Minutes);
 
     }
 
