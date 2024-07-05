@@ -105,11 +105,17 @@ function generateTable(packets_db) {
         var table_payload = "table_payload_" + i;
         let packet_json = JSON.stringify(packet,null,2).toString();
         payload_map.set(table_payload, packet_json);
+        var timestamp =  new Date (Date.parse(p.timestamp));
+
+        var timestamp_string = timestamp.getHours() + "h " + timestamp.getMinutes() + "m " + timestamp.getSeconds()+"s" ;
+
         var string = "<tr>\n" +
-            "            <td id=\"table_time\">" + p.timestamp + "</td>\n" +
+            "            <td id=\"table_time\">" + timestamp_string + "</td>\n" +
             "            <td id=\"table_type\">" + packet.mhdr.mtype + "</td>\n" +
-            "            <td>" + " <button id=" + table_payload + "> Show JSON  </button> </td>\n" +
+            "            <td>" + " <button class=\"rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 m-4 p-2 \" id=" + table_payload + "> Show JSON  </button> </td>\n" +
             "        </tr>";
+
+        string = "<tbody class='bg-slate-100' >"+string+"</tbody>";
         $('#packet_table').append(string);
 
         i++;
@@ -118,15 +124,12 @@ function generateTable(packets_db) {
 
     function handleClick(event,json) {
 
-        const formattedJson = JSON.stringify(json, null, 2);
-
-        // Highlight the formatted JSON
-        const highlightedJson = hljs.highlight('json', formattedJson).value;
-
         Swal.fire({
-            html:  '<pre><code>' + highlightedJson + '</code></pre>',
+            html:  '<div class="text-justify"><pre>' + json + '</pre></div>',
             confirmButtonText: 'OK'
         });
+
+        // $('#json').text(json);
     }
 
     payload_map.forEach((v, k) => {

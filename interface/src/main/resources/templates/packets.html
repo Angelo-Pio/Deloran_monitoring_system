@@ -5,6 +5,7 @@
     <title>Deloran Monitoring System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
+    <script type="text/css" th:src="@{/css/general.css}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js"></script>
 
@@ -94,7 +95,10 @@
     </div>
 </div>
 
-<div class="container"></div>
+
+<div class="container">
+
+</div>
 
 <div class="w-1/2 justify-self-center">
 
@@ -107,7 +111,7 @@
 
                 <div class="mt-4 inline-block w-auto justify-self-center col-span-1 order-1">
                     <button id="submit"
-                            class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-slate-600 text-sm font-medium text-gray-100 hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Submit
                     </button>
                 </div>
@@ -119,7 +123,7 @@
                 </div>
                 <div class="mt-4 inline-block w-auto justify-self-center order-2">
                     <button id="packet_pause"
-                            class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="custom_button">
                         Pause
                     </button>
                 </div>
@@ -139,19 +143,30 @@
 
 </div>
 
+<!--<div class="container">
+    <pre id="json"></pre>
+
+</div>-->
+
+
 <div class="w-11/12 p-5 m-10 justify-self-center rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
-    <table id="packet_table" class="table-auto">
+    <table id="packet_table" class="table-auto text-center w-full border-separate">
+        <thead class="font-mono bg-slate-600 text-white">
+
         <tr>
-            <th> Packet received at:</th>
-            <th> Quantity </th>
-            <th> Type </th>
-            <th> Payload </th>
+            <th class="m-6 p-2"> Packet received at:</th>
+            <th class="m-6 p-2"> Type</th>
+            <th class="m-6 p-2"> Payload</th>
         </tr>
+        </thead>
+
+
 
     </table>
 
 </div>
+
 
 <script>
     document.getElementById('dropdownButton').addEventListener('click', function () {
