@@ -3,90 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Deloran Monitoring System</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" th:src="@{/js/node_modules/chart.js/dist/chart.umd.js}"></script>
-    <script type="text/css" th:src="@{/css/general.css}"></script>
+    <link rel="stylesheet" th:href="@{/css/output.css}" >
+    <link rel="stylesheet" th:href="@{/css/basic.css}" >
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.12.1/dist/sweetalert2.all.min.js"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 
 </head>
-<style>
 
-
-    pre {
-        margin: 0;
-        padding: 1em;
-        background: #f5f5f5;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-
-    .swal-text {
-        background-color: #b4b4b4;
-        padding: 17px;
-        border: 1px solid #000000;
-        display: block;
-        margin: 22px;
-        text-align: center;
-        color: #61534e;
-    }
-
-    .navbar {
-        background-color: #004b7a;
-        color: #ffffff;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-        transition: top 0.3s;
-    }
-
-    .navbar.hide {
-        top: -50px;
-    }
-
-    .navbar-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-    }
-
-    .navbar-title {
-        font-family: 'Arial Black', sans-serif;
-    }
-
-    .navbar-links a {
-        color: #ffffff;
-        text-decoration: none;
-        margin-left: 20px;
-    }
-
-    .navbar-links a:hover {
-        text-decoration: underline;
-    }
-
-    .container {
-        margin-top: 70px;
-        padding: 20px;
-        background-color: #f2f2f2;
-        border-radius: 10px;
-    }
-</style>
 <body class="bg-gray-100 grid">
 
-<div class="navbar mb-20 " id="navbar">
+<div class="navbar" id="navbar">
     <div class="navbar-content">
-        <div class="navbar-title">Deloran Monitoring System</div>
+        <div class="navbar-title ">Deloran Monitoring System</div>
         <div class="navbar-links">
             <a th:href="@{/}">Home</a>
             <a th:href="@{/realtime}">Realtime graphs</a>
@@ -102,7 +30,7 @@
 
 <div class="w-1/2 justify-self-center">
 
-    <div class=" m-10 bg-white shadow-lg ring-1 ring-black ring-opacity-5   place-content-center">
+    <div class=" m-10 bg-white shadow-lg ring-1 ring-black ring-opacity-5   place-content-center rounded">
 
         <form id="packet_data">
 
@@ -111,13 +39,13 @@
 
                 <div class="mt-4 inline-block w-auto justify-self-center col-span-1 order-1">
                     <button id="submit"
-                            class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-slate-600 text-sm font-medium text-gray-100 hover:bg-slate-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="custom_button">
                         Submit
                     </button>
                 </div>
                 <div class="mt-4 inline-block w-auto justify-self-center order-3 ">
                     <button id="reset"
-                            class="inline-flex justify-center  m-4 rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            class="custom_button">
                         Reset
                     </button>
                 </div>
@@ -143,15 +71,15 @@
 
 </div>
 
-<!--<div class="container">
+<div class="container">
     <pre id="json"></pre>
 
-</div>-->
+</div>
 
 
 <div class="w-11/12 p-5 m-10 justify-self-center rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
-    <table id="packet_table" class="table-auto text-center w-full border-separate">
+    <table id="packet_table" class="table-auto text-center w-full border-separate rounded">
         <thead class="font-mono bg-slate-600 text-white">
 
         <tr>

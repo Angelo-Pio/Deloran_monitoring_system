@@ -15,6 +15,7 @@ public class Costants {
     public final static String  JDBC_URL = "mongodb://localhost:27017";
     public final static String  DB_USERNAME = "username";
     public final static String  DB_PASSWORD = "secret";
+    public final static String  TIMEZONE = "Europe/Rome";
 
 
     public static final String DB_NAME = "deloran";

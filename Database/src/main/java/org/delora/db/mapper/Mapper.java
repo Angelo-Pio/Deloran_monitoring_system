@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.bson.Document;
+import org.delora.db.Costants;
 import org.delora.db.Model.Resource;
 
 import java.time.LocalDateTime;
@@ -55,7 +56,7 @@ public class Mapper {
         resource.setCpu_usage(node.get("cpu_usage").asText());
         resource.setRam_usage(node.get("ram_usage").asText());
         LocalDateTime timestamp = LocalDateTime.parse(node.get("timestamp").asText(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        timestamp = timestamp.atZone(ZoneId.of("Europe/Rome")).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
+        timestamp = timestamp.atZone(ZoneId.of(Costants.TIMEZONE)).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
         resource.setTimestamp(timestamp);
         resource.setId(node.get("Id").asText());
 
@@ -100,14 +101,16 @@ public class Mapper {
             if (array.isArray()) {
 
                 for (JsonNode node : array) {
-                    String timestamp = node.get("timestamp").asText();
+                    String timestamp_string = node.get("timestamp").asText();
 
                     ObjectNode n = (ObjectNode) node;
                     n.remove("timestamp");
 
                     JsonNode packet = (JsonNode) n;
                     Document doc = Document.parse(packet.toString());
-                    doc.append("timestamp", LocalDateTime.parse(timestamp,DateTimeFormatter.ISO_LOCAL_DATE_TIME ));
+                    LocalDateTime timestamp = LocalDateTime.parse(timestamp_string, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                    timestamp = timestamp.atZone(ZoneId.of(Costants.TIMEZONE)).withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime();
+                    doc.append("timestamp", timestamp);
 
                     packet_list.add(doc);
                 }

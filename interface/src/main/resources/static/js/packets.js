@@ -49,6 +49,7 @@ function generateGraphs() {
                 handleChartCreationAndUpdate("PACKETS_TRAFFIC", data, "packets", true);
                 disableAnimation();
             } else {
+                clearInterval(interval_id);
                 destroyCharts();
             }
 
@@ -81,21 +82,6 @@ function generateTable(packets_db) {
     let graph_data = chart_list[0].chart.data.datasets[0].data;
     console.log(packets_db);
 
-    // if (graph_data != null) {
-    //     graph_data.forEach(d => {
-    //
-    //         var string = "<tr>\n" +
-    //             "            <td id=\"table_time\">" + d.x +"</td>\n" +
-    //         "            <td id=\"table_quantity\"> " + d.y +  "</td>\n" +
-    //         "            <td id=\"table_type\">type</td>\n" +
-    //         "            <td id=\"table_payload\">payload</td>\n" +
-    //         "        </tr>";
-    //         $('#packet_table').append(string)
-    //     });
-    //
-    //     $('#table_time').text(graph_data[0].x);
-    //     $('#table_payload').text(graph_data[0].y);
-    // }
 
     var i = 0;
     packets_db.forEach(p => {
@@ -124,12 +110,7 @@ function generateTable(packets_db) {
 
     function handleClick(event,json) {
 
-        Swal.fire({
-            html:  '<div class="text-justify"><pre>' + json + '</pre></div>',
-            confirmButtonText: 'OK'
-        });
-
-        // $('#json').text(json);
+        $('#json').text(json);
     }
 
     payload_map.forEach((v, k) => {
