@@ -8,6 +8,16 @@
     <link rel="stylesheet" th:href="@{/css/basic.css}" >
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+    <link href="https://cdn.datatables.net/v/dt/dt-2.1.0/datatables.min.css" rel="stylesheet">
+
+    <script src="https://cdn.datatables.net/v/dt/dt-2.1.0/datatables.min.js"></script>
+    <style>
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0;
+            margin-top: 10px;
+            display: inline-block;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 grid">
@@ -77,9 +87,10 @@
 </div>
 
 
+
 <div class="w-11/12 p-5 m-10 justify-self-center rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
 
-    <table id="packet_table" class="table-auto text-center w-full border-separate rounded">
+    <table id="packet_table" class="table-auto text-center w-full border-separate rounded" data-currentpage="1">
         <thead class="font-mono bg-slate-600 text-white">
 
         <tr>
@@ -89,21 +100,16 @@
         </tr>
         </thead>
 
-
-
     </table>
+
+
 
 </div>
 
 
-<script>
-    document.getElementById('dropdownButton').addEventListener('click', function () {
-        var menu = document.getElementById('dropdownMenu');
-        menu.classList.toggle('hidden');
-    });
-</script>
 <script type="application/javascript" th:src="@{js/aux.js}"></script>
 <script type="application/javascript" th:src="@{js/packets.js}"></script>
+
 </body>
 
 </html>

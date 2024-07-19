@@ -1,8 +1,10 @@
 //List of CustomChart
 var chart_list = [];
 var interval_id = null;
-var packets_db = null;
+var packets_db = [];
 var payload_map = new Map();
+var packet_table;
+
 
 $(document).ready(function () {
     $('#packet_data').submit(function (event) {
@@ -18,8 +20,29 @@ $(document).ready(function () {
         event.preventDefault();
         clearInterval(interval_id);
         console.log("GRAPH PAUSED");
-        generateTable(packets_db);
+        if(packets_db.length !== 0){
+            generateTable(packets_db);
+        }
+
     })
+
+    packet_table = $('#packet_table').DataTable({
+        "paging": true,
+        "searching": false, // Disable search box
+        "info": false, // Disable info text,
+        "pageLength" : 15,
+        language: {
+            entries: {
+                _: 'packets',
+                1: 'packet'
+            },
+            info: ""
+        }
+    });
+
+
+
+
 
 
 
@@ -79,11 +102,9 @@ $('#reset').click(function (event) {
 })
 
 function generateTable(packets_db) {
-    let graph_data = chart_list[0].chart.data.datasets[0].data;
-    console.log(packets_db);
-
 
     var i = 0;
+    var newData = [];
     packets_db.forEach(p => {
 
         var packet = JSON.parse(p.packet);
@@ -93,23 +114,23 @@ function generateTable(packets_db) {
         payload_map.set(table_payload, packet_json);
         var timestamp =  new Date (Date.parse(p.timestamp));
 
-        var timestamp_string = timestamp.getHours() + "h " + timestamp.getMinutes() + "m " + timestamp.getSeconds()+"s" ;
+        var timestamp_string = timestamp.getHours() + ":" + timestamp.getMinutes() + ":" + timestamp.getSeconds()+"" ;
 
-        var string = "<tr>\n" +
-            "            <td id=\"table_time\">" + timestamp_string + "</td>\n" +
-            "            <td id=\"table_type\">" + packet.mhdr.mtype + "</td>\n" +
-            "            <td>" + " <button class=\"rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 m-4 p-2 \" id=" + table_payload + "> Show JSON  </button> </td>\n" +
-            "        </tr>";
+        var payload = "<button class=\"rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 m-4 p-2 \" id=" + table_payload + "> Show JSON  </button> </td>\n";
 
-        string = "<tbody class='bg-slate-100' >"+string+"</tbody>";
-        $('#packet_table').append(string);
+        newData.push([
+            timestamp_string,
+            packet.mhdr.mtype,
+            payload
+        ]);
 
-        i++;
+            i++;
 
     });
+    packet_table.clear();
+    packet_table.rows.add(newData).draw();
 
-    function handleClick(event,json) {
-
+    function handleClick(event, json) {
         $('#json').text(json);
     }
 
@@ -117,8 +138,9 @@ function generateTable(packets_db) {
         $("#" + k).on('click', function (event) {
             handleClick(event,v);
         });
-        console.log("ok");
     });
+
+
 
 }
 
