@@ -131,7 +131,7 @@ function generateTable(packets_db) {
     packet_table.rows.add(newData).draw();
 
     function handleClick(event, json) {
-        $('#json').text(json);
+        $('#json').html(colorize(JSON.parse(json),1));
     }
 
     payload_map.forEach((v, k) => {
@@ -142,6 +142,35 @@ function generateTable(packets_db) {
 
 
 
+}
+
+function colorize(obj, level) {
+    if(obj == null || obj == undefined) return `<span class="nullcolor">${obj}</span>`
+    if (typeof obj == 'number') return `<span class="numbercolor">${obj}</span>`
+    else if (typeof obj == 'string') return `<span class="stringcolor">"${obj}"</span>`
+
+    let isArray = Array.isArray(obj)
+    let html = `${level == 1 ? '<span style="color: white;">' : ''}${isArray ? '[' : '{'}<br>`
+    if (isArray) {
+        obj.forEach(elem => {
+            html += `${'&emsp;'.repeat(level)}${colorize(elem,level + 1)},<br>`
+        })
+    }
+    else {
+        Object.keys(obj).forEach(key => {
+            if (typeof obj[key] == 'object') {
+                if (Array.isArray(obj[key])) {
+                    html += `${'&emsp;'.repeat(level)}<span class="keycolor">${key}</span>:&nbsp${colorize(obj[key], level + 1)}<br>`
+                }
+                else html += `${'&emsp;'.repeat(level)}<span class="keycolor">${key}</span>:&nbsp${colorize(obj[key], level + 1)}<br>`
+            }
+            else if (typeof obj[key] == 'number') html += `${'&emsp;'.repeat(level)}<span class="keycolor">${key}</span>:&nbsp${colorize(obj[key])}<br>`
+            else if (typeof obj[key] == 'string') html += `${'&emsp;'.repeat(level)}<span class="keycolor">${key}</span>:&nbsp${colorize(obj[key])}<br>`
+            else html += `${'&emsp;'.repeat(level)}<span class="keycolor">${key}</span>:&nbsp<span class="defaultcolor">${obj[key]}</span><br>`
+        })
+    }
+    html += `${'&emsp;'.repeat(level - 1)}${isArray ? ']' : '}'}${level == 1 ? '</span>' : ''}`
+    return html
 }
 
 

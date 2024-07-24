@@ -271,7 +271,7 @@ function packetsDatasetGeneration(map, data) {
         }
     )
     var res = new Map();
-    res.set("mock", []);
+    res.set("Gateway", []);
 
     var arr = Array.from(graphPackets);
 
@@ -298,6 +298,10 @@ function packetsDatasetGeneration(map, data) {
         var referenceDate = date2;
 
 
+
+
+        // This let you show time in seconds from the beginning  instead of a timestamp
+
         newX = (referenceDate - firstDate) / 1000;
         if (newX >= 60) {
             var minutes = Math.floor(newX / 60);
@@ -307,10 +311,33 @@ function packetsDatasetGeneration(map, data) {
             newX = newX.toString() + "s";
         }
 
+
+
+
         newY = count;
 
+
+        var counter_1;
+        var counter_2;
+
+        //If j is last item
+        if (i == arr.length - 1) {
+            counter_1 = arr[i - 1][1];
+            counter_2 = arr[i][1];
+        } else {
+            counter_1 = arr[i][1];
+            counter_2 = arr[i + 1][1];
+        }
+
+        if(counter_2 >= counter_1){
+            newY = counter_2 - counter_1;
+        }else{
+            newY = counter_1 - counter_2;
+        }
+
+
 //TODO replace mock with gateway id
-        res.get("mock").push({
+        res.get("Gateway").push({
             x: newX,
             y: newY
         });

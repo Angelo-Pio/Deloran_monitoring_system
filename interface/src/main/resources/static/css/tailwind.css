@@ -25,7 +25,7 @@
 }
 
 .navbar {
-    @apply bg-[#d89d3f] fixed top-0 left-0 w-full z-auto transition-shadow shadow-gray-400 rounded m-0.5 shadow-sm
+    @apply bg-[#d89d3f] fixed top-0 left-0 w-full z-50 transition-shadow shadow-gray-400 rounded m-0.5 shadow-sm
 }
 
 .time-selector{
@@ -34,4 +34,8 @@
 
 .label-time{
     @apply w-auto justify-self-center ;
+}
+
+.container {
+    @apply w-11/12 justify-self-center p-[20px] bg-opacity-5 rounded;
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.bson.Document;
 import org.delora.db.Costants;
@@ -106,6 +107,11 @@ public class Mapper {
                     ObjectNode n = (ObjectNode) node;
                     n.remove("timestamp");
 
+                   transformJson((JsonNode) n);
+
+                    System.out.println(n);
+
+
                     JsonNode packet = (JsonNode) n;
                     Document doc = Document.parse(packet.toString());
                     LocalDateTime timestamp = LocalDateTime.parse(timestamp_string, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -125,4 +131,49 @@ public class Mapper {
         }
 
     }
+
+
+
+    private static void transformJson(JsonNode node) {
+        if (node.isObject()) {
+            ObjectNode objectNode = (ObjectNode) node;
+            objectNode.fieldNames().forEachRemaining(fieldName -> {
+                JsonNode childNode = objectNode.get(fieldName);
+                if (childNode.isArray() && isArrayOfIntegers(childNode)) {
+                    objectNode.put(fieldName, arrayToHex((ArrayNode) childNode));
+                } else {
+                    transformJson(childNode);
+                }
+            });
+        } else if (node.isArray()) {
+            ArrayNode arrayNode = (ArrayNode) node;
+            for (JsonNode item : arrayNode) {
+                transformJson(item);
+            }
+        }
+    }
+
+    private static boolean isArrayOfIntegers(JsonNode node) {
+        if (!node.isArray()) {
+            return false;
+        }
+        for (JsonNode item : node) {
+            if (!item.isInt()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static String arrayToHex(ArrayNode arrayNode) {
+        StringBuilder hexString = new StringBuilder();
+        for (JsonNode item : arrayNode) {
+            hexString.append(String.format("%02x", item.intValue()));
+        }
+        return hexString.toString();
+    }
+
+
 }
+
+
