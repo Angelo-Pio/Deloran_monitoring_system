@@ -20,6 +20,6 @@ public class Costants {
 
     public static final String DB_NAME = "deloran";
     //TODO remove this type and change collection name
-    public static final String resources_collection="gateway";
+    public static final String resources_collection="resources";
     public static final String packets_collection="packets";
 }

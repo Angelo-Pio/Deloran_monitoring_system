@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface IntRepository extends MongoRepository<Resources,String> {
+public interface ResoucesRepository extends MongoRepository<Resources,String> {
 
     @Query("{timestamp: {$gte: ?0, $lte: ?1 }}")
     List<Resources> findAllByTimestamp(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);

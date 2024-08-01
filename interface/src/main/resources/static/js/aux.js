@@ -216,9 +216,16 @@ function transform(map, property, realtime) {
                     firstDate = referenceDate;
                 }
                 newX = Math.abs((referenceDate - firstDate) / 1000);
+                if (newX >= 60) {
+                    var minutes = Math.floor(newX / 60);
+                    var seconds = Math.floor(newX % 60);
+                    newX = minutes.toString() + "m " + seconds.toString() + "s";
+                } else {
+                    newX = newX.toString() + "s";
+                }
+            } else {
+                newX = newX.toString();
             }
-            // ! IMPORTANTE
-            newX = newX.toString() + "s";
 
             const newVal = {
                 x: newX,
@@ -298,8 +305,6 @@ function packetsDatasetGeneration(map, data) {
         var referenceDate = date2;
 
 
-
-
         // This let you show time in seconds from the beginning  instead of a timestamp
 
         newX = (referenceDate - firstDate) / 1000;
@@ -310,8 +315,6 @@ function packetsDatasetGeneration(map, data) {
         } else {
             newX = newX.toString() + "s";
         }
-
-
 
 
         newY = count;
@@ -329,9 +332,9 @@ function packetsDatasetGeneration(map, data) {
             counter_2 = arr[i + 1][1];
         }
 
-        if(counter_2 >= counter_1){
+        if (counter_2 >= counter_1) {
             newY = counter_2 - counter_1;
-        }else{
+        } else {
             newY = counter_1 - counter_2;
         }
 

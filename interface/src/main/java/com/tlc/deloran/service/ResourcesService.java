@@ -3,7 +3,7 @@ package com.tlc.deloran.service;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoClient;
 import com.tlc.deloran.model.Resources;
-import com.tlc.deloran.repository.IntRepository;
+import com.tlc.deloran.repository.ResoucesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.grou
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
 
 @Service
-public class IntService {
+public class ResourcesService {
 
     @Autowired
-    private IntRepository intRepository;
+    private ResoucesRepository resoucesRepository;
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -26,7 +26,7 @@ public class IntService {
     private MongoClient mongo;
 
     public List<Resources> getAllResources(){
-        return intRepository.findAll();
+        return resoucesRepository.findAll();
     }
 
     // Main method
@@ -55,14 +55,14 @@ public class IntService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime last5Minutes = now.minusMinutes(5);
         if(start == null && end == null){
-            return intRepository.findAllByTimestamp(last5Minutes, now);
+            return resoucesRepository.findAllByTimestamp(last5Minutes, now);
         } else if (start != null && end == null) {
-            return intRepository.findAllByTimestamp(start, now);
+            return resoucesRepository.findAllByTimestamp(start, now);
         }else if(start == null && end != null){
-            return intRepository.findAllByTimestampBefore(end);
+            return resoucesRepository.findAllByTimestampBefore(end);
         }
         else{
-            return intRepository.findAllByTimestamp(start, end);
+            return resoucesRepository.findAllByTimestamp(start, end);
         }
     }
 
@@ -73,14 +73,14 @@ public class IntService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime last5Minutes = now.minusMinutes(5);
         if(start == null && end == null){
-            return intRepository.findAllById_Timestamp(id,last5Minutes, now);
+            return resoucesRepository.findAllById_Timestamp(id,last5Minutes, now);
         } else if (start != null && end == null) {
-            return intRepository.findAllById_Timestamp(id,start, now);
+            return resoucesRepository.findAllById_Timestamp(id,start, now);
         }else if(start == null && end != null){
-            return intRepository.findAllById_TimestampBefore(id,end);
+            return resoucesRepository.findAllById_TimestampBefore(id,end);
         }
         else{
-            return intRepository.findAllById_Timestamp(id,start, end);
+            return resoucesRepository.findAllById_Timestamp(id,start, end);
         }
     }
 

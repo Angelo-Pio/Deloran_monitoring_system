@@ -24,7 +24,7 @@ $(document).ready(function () {
             generateTable(packets_db);
         }
 
-    })
+    });
 
     packet_table = $('#packet_table').DataTable({
         "paging": true,
@@ -39,6 +39,20 @@ $(document).ready(function () {
             info: ""
         }
     });
+
+    $('#reset').click(function (event) {
+        event.preventDefault();
+        chart_list.forEach(c => {
+            $('#'.concat(c.canva_name)).attr("class", "0");
+            c.chart.destroy();
+        })
+        chart_list = [];
+        clearInterval(interval_id);
+        if(packet_table != null){
+            packet_table.clear().draw();
+        }
+    });
+
 
 
 
@@ -91,15 +105,7 @@ function disableAnimation() {
 }
 
 // Reset graphs
-$('#reset').click(function (event) {
-    event.preventDefault();
-    chart_list.forEach(c => {
-        $('#'.concat(c.canva_name)).attr("class", "0");
-        c.chart.destroy();
-    })
-    chart_list = [];
-    clearInterval(interval_id);
-})
+
 
 function generateTable(packets_db) {
 

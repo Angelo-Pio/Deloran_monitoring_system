@@ -2,7 +2,7 @@ package com.tlc.deloran.controller;
 
 import com.tlc.deloran.model.Packet;
 import com.tlc.deloran.model.Resources;
-import com.tlc.deloran.service.IntService;
+import com.tlc.deloran.service.ResourcesService;
 import com.tlc.deloran.service.PacketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -17,7 +17,7 @@ public class RestController {
 
 
     @Autowired
-    private IntService intService;
+    private ResourcesService resourcesService;
 
     @Autowired
     private PacketService packetService;
@@ -28,12 +28,12 @@ public class RestController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam(value = "end", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        return intService.getAllResourcesByTimestamp(start, end);
+        return resourcesService.getAllResourcesByTimestamp(start, end);
     }
 
     @GetMapping("/resources/getAll")
     public List<Resources> getAll() {
-        return intService.getAllResources();
+        return resourcesService.getAllResources();
     }
 
     @GetMapping("/resources/getAllById&Timestamp")
@@ -44,12 +44,12 @@ public class RestController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
             @RequestParam(value = "id", required = false) String[] id
     ) {
-        return intService.getAllByIdAndTimestamp(id, start, end);
+        return resourcesService.getAllByIdAndTimestamp(id, start, end);
     }
 
     @GetMapping("/resources/getAllIds")
     public List<String> getAllIds() {
-        return intService.getAllIds();
+        return resourcesService.getAllIds();
     }
 
     @GetMapping("/packets/getAllLastFiveMinutesPackets")
